@@ -1,0 +1,91 @@
+[
+    {
+        "parsed_json": {
+            "main": [
+                {
+                    "@context": "https://schema.org",
+                    "@type": "NewsArticle",
+                    "mainEntityOfPage": {
+                        "@type": "WebPage",
+                        "@id": "journal/politique/180323/apres-l-annonce-du-49-3-sur-les-retraites-le-mouvement-se-radicalise-la-police-brutalise"
+                    },
+                    "headline": "Apr\u00e8s l\u2019annonce du 49-3 sur les retraites\u00a0: le mouvement se radicalise, la police brutalise",
+                    "image": [
+                        "https://static.mediapart.fr/etmagine/og/journal/files/2023/03/18/20230318-img-apres-lannonce-du-49-3-le-mouvement-se-radicalise-la-police-brutalise-1.jpg"
+                    ],
+                    "datePublished": "2023-03-18T22:32:20+01:00",
+                    "dateModified": "2023-03-18T22:54:09+01:00",
+                    "author": [
+                        {
+                            "@type": "Person",
+                            "name": "Mathieu Dejean",
+                            "url": "https://www.mediapart.fr/biographie/mathieu-dejean-0"
+                        },
+                        {
+                            "@type": "Person",
+                            "name": "J\u00e9r\u00f4me Hourdeaux",
+                            "url": "https://www.mediapart.fr/biographie/jerome-hourdeaux"
+                        }
+                    ],
+                    "publisher": {
+                        "@type": "Organization",
+                        "name": "Mediapart",
+                        "logo": {
+                            "@type": "ImageObject",
+                            "url": "https://www.mediapart.fr/images/v2/header/brand.svg"
+                        }
+                    },
+                    "description": "Apr\u00e8s le passage en force de la r\u00e9forme des retraites par le 49-3, le mouvement de contestation durcit le ton. Beaucoup de manifestants estiment que le gouvernement s\u2019est mis lui-m\u00eame dans une situation qui pousse \u00e0 la violence. \u00c0 Paris notamment, des policiers ont violemment r\u00e9prim\u00e9 la mobilisation.",
+                    "isAccessibleForFree": "False",
+                    "hasPart": {
+                        "@type": "WebPageElement",
+                        "isAccessibleForFree": "False",
+                        "cssSelector": ".paywall-restricted-content"
+                    }
+                }
+            ]
+        },
+        "parsed_data": {
+            "publisher": [
+                {
+                    "@id": "mediapart.fr",
+                    "@type": "NewsMediaOrganization",
+                    "name": "Global NEWS",
+                    "logo": {
+                        "@type": "ImageObject",
+                        "url": "https://www.mediapart.fr/assets/build/default/front/favicon/journal/favicon-32x32.png?r=e58c305c",
+                        "width": {
+                            "@type": "Distance",
+                            "name": "32 px"
+                        },
+                        "height": {
+                            "@type": "Distance",
+                            "name": "32 px"
+                        }
+                    }
+                }
+            ],
+            "author": [
+                {
+                    "@type": "Person",
+                    "name": "Mathieu Dejean",
+                    "url": "https://www.mediapart.fr/biographie/mathieu-dejean-0"
+                },
+                {
+                    "@type": "Person",
+                    "name": "J\u00e9r\u00f4me Hourdeaux",
+                    "url": "https://www.mediapart.fr/biographie/jerome-hourdeaux"
+                }
+            ],
+            "published_at": [
+                "18 mars 2023 \u00e0 22h32"
+            ],
+            "description": [
+                "Apr\u00e8s le passage en force de la r\u00e9forme des retraites par le 49-3, le mouvement de contestation durcit le ton. Beaucoup de manifestants estiment que le gouvernement s\u2019est mis lui-m\u00eame dans une situation qui pousse \u00e0 la violence. \u00c0 Paris notamment, des policiers ont violemment r\u00e9prim\u00e9 la mobilisation."
+            ],
+            "text": [
+                " flammes, une odeur de gaz lacrymog\u00e8ne, des courses poursuites et des coups de matraque qui pleuvent\u00a0: c\u2019est ainsi que s\u2019est termin\u00e9e la manifestation contre la r\u00e9forme des retraites appel\u00e9e par\u00a0la CGT \u00cele-de-France, samedi 18 mars, en attendant la grande journ\u00e9e de mobilisation nationale de jeudi prochain. La r\u00e9ponse de la rue au 49-3 du gouvernement a continu\u00e9 de se faire entendre bruyamment dans la capitale comme dans plusieurs grandes villes, apr\u00e8s  ."
+            ]
+        }
+    }
+]

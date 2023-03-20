@@ -1,0 +1,46 @@
+[
+    {
+        "parsed_data": {
+            "publisher": [
+                {
+                    "@id": "mediapart.fr",
+                    "@type": "NewsMediaOrganization",
+                    "name": "Global NEWS",
+                    "logo": {
+                        "@type": "ImageObject",
+                        "url": "https://www.mediapart.fr/assets/build/default/front/favicon/journal/favicon-32x32.png?r=e58c305c",
+                        "width": {
+                            "@type": "Distance",
+                            "name": "32 px"
+                        },
+                        "height": {
+                            "@type": "Distance",
+                            "name": "32 px"
+                        }
+                    }
+                }
+            ],
+            "author": [
+                {
+                    "@type": "Person",
+                    "name": "Mathieu Dejean",
+                    "url": "https://www.mediapart.fr/biographie/mathieu-dejean-0"
+                },
+                {
+                    "@type": "Person",
+                    "name": "J\u00e9r\u00f4me Hourdeaux",
+                    "url": "https://www.mediapart.fr/biographie/jerome-hourdeaux"
+                }
+            ],
+            "published_at": [
+                "18 mars 2023 \u00e0 22h32"
+            ],
+            "description": [
+                "Apr\u00e8s le passage en force de la r\u00e9forme des retraites par le 49-3, le mouvement de contestation durcit le ton. Beaucoup de manifestants estiment que le gouvernement s\u2019est mis lui-m\u00eame dans une situation qui pousse \u00e0 la violence. \u00c0 Paris notamment, des policiers ont violemment r\u00e9prim\u00e9 la mobilisation."
+            ],
+            "text": [
+                " flammes, une odeur de gaz lacrymog\u00e8ne, des courses poursuites et des coups de matraque qui pleuvent\u00a0: c\u2019est ainsi que s\u2019est termin\u00e9e la manifestation contre la r\u00e9forme des retraites appel\u00e9e par\u00a0la CGT \u00cele-de-France, samedi 18 mars, en attendant la grande journ\u00e9e de mobilisation nationale de jeudi prochain. La r\u00e9ponse de la rue au 49-3 du gouvernement a continu\u00e9 de se faire entendre bruyamment dans la capitale comme dans plusieurs grandes villes, apr\u00e8s  ."
+            ]
+        }
+    }
+]

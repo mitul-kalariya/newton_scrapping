@@ -1,0 +1,528 @@
+[
+  {
+    "response_data": {
+      "Breadcrumbs": [
+        {
+          "index": 0,
+          "page": "home",
+          "url": "/"
+        },
+        {
+          "index": 1,
+          "page": "Ausland",
+          "url": "https://www.tagesschau.de/ausland/"
+        },
+        {
+          "index": 2,
+          "page": "Nach dem Vorbild Russlands: Belarus führt Todesstrafe bei Hochverrat ein",
+          "url": "https://www.tagesschau.de/ausland/todesstrafe-belarus-hochverrat-militaer-101.html"
+        }
+      ],
+      "HeadLine": "Belarus führt Todesstrafe bei Hochverrat ein",
+      "tag_line": "Nach dem Vorbild Russlands",
+      "publisher": {
+        "@id": "tagesschau.de",
+        "@type": "NewsMediaOrganization",
+        "name": "tagesschau",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://www.tagesschau.de/res/assets/image/favicon/favicon-96x96.png",
+          "width": {
+            "@type": "Distance",
+            "name": "96 px"
+          },
+          "height": {
+            "@type": "Distance",
+            "name": "96 px"
+          }
+        }
+      },
+      "published_at": "Stand: 10.03.2023 02:34 Uhr",
+      "descryption": "Staatsbediensteten und Militärangehörigen in Belarus droht bei Hochverrat künftig die Todesstrafe. Präsident Alexander Lukaschenko unterzeichnete ein entsprechendes Gesetz. Es sieht das Todesurteil für Funktionäre und Soldaten vor, die durch Akte des Verrats irreparablen Schaden für die nationale Sicherheit des Landes angerichtet hätten.  Die von Lukaschenko gebilligten Änderungen am Strafrecht umfassen zudem Strafen für die Verbreitung von Propaganda des Terrorismus, Diffamierung der Streitkräfte sowie paramilitärischer Einheiten und die Verletzung von Regeln zum Schutz von Staatsgeheimnissen.  Damit orientiert sich Belarus an ähnlichen Gesetzen seines wichtigsten Verbündeten Russland. Belarus ist das einzige Land in Europa, das die Todesstrafe nicht abgeschafft hat. Hinrichtungen drohen dort bisher bei Verurteilungen wegen Mordes oder Terrorismus. Vollzogen wird die Todesstrafe durch einen Schuss in den Hinterkopf. ",
+      "sub_headings": [
+        "Belarus führt Todesstrafe bei Hochverrat ein",
+        "Ähnliches Gesetz gilt auch in Russland"
+      ],
+      "thumbnail_image": {
+        "@type": "image_media",
+        "image_link": "https://www.tagesschau.de//multimedia/bilder/lukaschenko-belarus-113~_v-videowebm.jpg",
+        "dimensions": {
+          "width": 512,
+          "height": 288
+        }
+      },
+      "tags": [
+        "Belarus",
+        "Russland",
+        "Todesstrafe"
+      ],
+      "recommendations": [
+        {
+          "image": "https://www.tagesschau.de//multimedia/bilder/belarus-flugzeugplatz-101~_v-klein1x1.jpg",
+          "publish_date": "07.03.2023",
+          "topic": "Nach Angriff auf russischen Jet",
+          "Tag-line": "Mehrere Verdächtige in Belarus festgenommen",
+          "short_descryption": "Ende Februar hatte die Exil-Opposition von einem Angriff auf ein russisches Militärflugzeug in Belarus berichtet."
+        },
+        {
+          "image": "https://www.tagesschau.de//messenger-foto-101~_v-klein1x1.jpg",
+          "publish_date": "15.06.2021",
+          "topic": "Jetzt abonnieren",
+          "Tag-line": "tagesschau direkt auf Ihrem Messenger",
+          "short_descryption": "Seien Sie immer auf dem Laufenden - mit dem Messenger-Angebot der tagesschau."
+        }
+      ]
+    }
+  },
+  {
+    "response_data": {
+      "Breadcrumbs": [
+        {
+          "index": 0,
+          "page": "home",
+          "url": "/"
+        },
+        {
+          "index": 1,
+          "page": "Ausland",
+          "url": "https://www.tagesschau.de/ausland/"
+        },
+        {
+          "index": 2,
+          "page": "Volkskongress in China: Bislang größter Umbau der Regierung gebilligt",
+          "url": "https://www.tagesschau.de/ausland/china-volkskongress-umbau-regierung-arbeitsplaetze-101.html"
+        }
+      ],
+      "HeadLine": "Bislang größter Umbau der Regierung gebilligt",
+      "tag_line": "Volkskongress in China",
+      "publisher": {
+        "@id": "tagesschau.de",
+        "@type": "NewsMediaOrganization",
+        "name": "tagesschau",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://www.tagesschau.de/res/assets/image/favicon/favicon-96x96.png",
+          "width": {
+            "@type": "Distance",
+            "name": "96 px"
+          },
+          "height": {
+            "@type": "Distance",
+            "name": "96 px"
+          }
+        }
+      },
+      "published_at": "Stand: 10.03.2023 03:50 Uhr",
+      "descryption": "Der chinesische Volkskongress hat die seit langem größte Umorganisation der Regierung in Peking gebilligt. Die knapp 3000 handverlesenen Delegierten stimmten auf ihrer gut einwöchigen Jahrestagung in Peking erwartungsgemäß für den Plan der chinesischen Parteiführung zur institutionellen Reform.  Angesichts wachsenden Drucks durch die USA ist das Ziel eine bessere Ausgangslage im internationalen Wettbewerb und mehr technologische Eigenständigkeit.  Der Umbau ist auch mit Jobkürzungen verbunden: Fünf Prozent der Arbeitsplätze sollen wegfallen, wie aus dem Plan hervorging. Es ist die größte Zahl seit der letzten weitgehenden Restrukturierung 1998.  Eine neue Kommission für die Finanzaufsicht wird geschaffen, die bisherige Funktionen der Zentralbank teilweise übernimmt. Damit soll die Kontrolle von Banken, Versicherungen und innovativen Finanzplattformen sowie der Verbraucherschutz besser koordiniert werden.  Auch wird das Ministerium für Wissenschaft und Technologie umorganisiert sowie eine eigene nationale Behörde zur Verwaltung der zunehmenden Mengen an Daten geschaffen.  Aus chinesischer Sicht versuchen die USA zunehmend, China mit Exportkontrollen, Sanktionen und anderen Beschränkungen den Zugang zu Technologie abzuschneiden. Mit dieser Eindämmungspolitik wollten die USA und der Westen den Aufstieg der zweitgrößten Wirtschaftsmacht der Welt behindern, wie Xi Jinping Anfang der Woche am Rande des Volkskongresses beklagte.  Ende vergangenen Jahres hatte die US-Regierung den Verkauf und Import von Kommunikationsgeräten der chinesischen Smartphonehersteller und Netzwerkausrüster Huawei und ZTE verboten. Diese stellten ein inakzeptables Risiko für die nationale Sicherheit dar, begründete damals die US-Telekommunikationsaufsicht FCC den Schritt.  Zuletzt erwog auch die Bundesregierung ein Verbot von chinesischen Komponenten für das 5G-Netz. Dabei ging es weniger um die Gefahr eines möglichen Datenabflusses, sondern vielmehr die möglichen Folgen der aktuellen extremen Marktmacht chinesischer Anbieter.  Angesichts des internationalen technologischen Wettbewerbs und der ernsten Lage durch externen Druck zur Eindämmung müssen wir unsere technologische Führung und das Managementsystem weiter organisieren, um unsere Stärken besser zu koordinieren und Herausforderungen in technologischen Kernbereichen zu überwinden, hieß es in einem Dokument des Staatsrates zur Restrukturierung. Damit werde China geholfen, beschleunigt technologische Selbstständigkeit auf hohem Niveau zu erreichen.  Xi soll an diesem Freitag für eine ungewöhnliche dritte Amtsperiode als Präsident bestätigt werden. Dieses Vorgehen würde mit der Norm brechen, denn bislang war nach zwei Amtszeiten und zehn Jahren Schluss an der Spitze von Staat und Partei. Die Grundlage für den Ausbau der Macht Xis hat im vergangenen Jahr der Parteitag der Kommunistischen Partei geschaffen. Allgemein wird erwartet, dass der Volkskongress Xi im Amt bestätigen wird.",
+      "sub_headings": [
+        "Bislang größter Umbau der Regierung gebilligt",
+        "Neue Datenbehörde",
+        "China kritisiert \"Eindämmungspolitik\"",
+        "Deutschland erwägt Verbot chinesischer 5G-Komponenten"
+      ],
+      "thumbnail_image": {
+        "@type": "image_media",
+        "image_link": "https://www.tagesschau.de//multimedia/bilder/china-volkskongress-xi-jinping-101~_v-videowebm.jpg",
+        "dimensions": {
+          "width": 512,
+          "height": 288
+        }
+      },
+      "tags": [
+        "China",
+        "Volkskongress",
+        "USA",
+        "Xi Jinping"
+      ],
+      "recommendations": [
+        {
+          "image": "https://www.tagesschau.de//multimedia/bilder/huawei-logo-passanten-101~_v-klein1x1.jpg",
+          "publish_date": "08.03.2023",
+          "topic": "Globale Sicherheitsbedenken",
+          "Tag-line": "Chinas",
+          "short_descryption": "Weltweit wächst das Misstrauen gegen den chinesischen Technologiekonzern Huawei."
+        },
+        {
+          "image": "https://www.tagesschau.de//multimedia/bilder/xi-jinping-161~_v-klein1x1.jpg",
+          "publish_date": "07.03.2023",
+          "topic": "Chinas Staatschef",
+          "Tag-line": "Xi wirft USA Unterdrückung vor",
+          "short_descryption": "Unter der Führung der USA schotte der Westen China ab und behindere so die wirtschaftliche Entwicklung."
+        },
+        {
+          "image": "https://www.tagesschau.de//huawei-189~_v-klein1x1.jpg",
+          "publish_date": "26.11.2022",
+          "topic": "Sorge über Spionage",
+          "Tag-line": "USA verbannen Huawei-Geräte vom Markt",
+          "short_descryption": "Die USA haben den Import und Verkauf von Geräten namhafter chinesischer Hersteller untersagt."
+        }
+      ]
+    }
+  },
+  {
+    "response_data": {
+      "Breadcrumbs": [
+        {
+          "index": 0,
+          "page": "home",
+          "url": "/"
+        },
+        {
+          "index": 1,
+          "page": "Ausland",
+          "url": "https://www.tagesschau.de/ausland/"
+        },
+        {
+          "index": 2,
+          "page": "Asien",
+          "url": "https://www.tagesschau.de/ausland/asien/"
+        },
+        {
+          "index": 3,
+          "page": "Israel: Verletzte bei Anschlag in Tel Aviv",
+          "url": "https://www.tagesschau.de/ausland/asien/israel-anschlag-tel-aviv-101.html"
+        }
+      ],
+      "HeadLine": "Verletzte bei Anschlag in Tel Aviv",
+      "tag_line": "Israel",
+      "publisher": {
+        "@id": "tagesschau.de",
+        "@type": "NewsMediaOrganization",
+        "name": "tagesschau",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://www.tagesschau.de/res/assets/image/favicon/favicon-96x96.png",
+          "width": {
+            "@type": "Distance",
+            "name": "96 px"
+          },
+          "height": {
+            "@type": "Distance",
+            "name": "96 px"
+          }
+        }
+      },
+      "published_at": "Stand: 10.03.2023 07:11 Uhr",
+      "descryption": "Im Zentrum von Tel Aviv sind mindestens drei Menschen bei einem Schusswaffenangriff verletzt worden, einer davon lebensgefährlich. Der Attentäter war an einer belebten Kreuzung aus einem Auto gestiegen und hatte das Feuer auf ein Restaurant eröffnet. Danach hatte er laut einem Bericht des israelischen Fernsehens die Flucht ergriffen und war nur wenige Meter vom Tatort entfernt erschossen worden.  Bei dem Attentäter soll es sich demnach um einen 23-Jährigen handeln, der Mitglied der Terrororganisation Hamas sei. Im Umfeld des Tatorts suchten Beamte nach weiteren Mittätern.  Der Vorfall ereignete sich auf der belebten Dizengoff-Straße. Zu dem Zeitpunkt hatten sich wieder viele Menschen im Stadtzentrum versammelt, um gegen die Pläne der Regierung zur Schwächung der Justiz zu protestieren. Der israelische Ministerpräsident Benjamin Netanyahu, der sich gegenwärtig zu einem Besuch in Rom aufhält, sprach von einem schweren Anschlag in Tel Aviv. Der deutsche Botschafter Steffen Seibert schrieb bei Twitter, er sei entsetzt und traurig über den Terroranschlag im Herzen Tel Avivs.  Stunden zuvor hatten israelische Sicherheitskräfte bei Dschenin im Westjordanland drei Palästinenser getötet, die der Terrorgruppe Islamischer Dschihad angehört haben sollen. Die Polizisten hatten nach offiziellen Angaben in einem Dorf nach Verdächtigen zu Angriffen auf israelische Truppen gesucht. Die drei Männer sollen auf sie geschossen haben, bevor sie das Feuer erwiderten. In der derzeit sehr angespannten Situation sind seit Jahresbeginn 13 Israelis und eine Ukrainerin bei Anschlägen getötet worden. Im gleichen Zeitraum kamen 75 Palästinenser ums Leben, entweder bei Konfrontationen mit der israelischen Armee oder bei eigenen Anschlägen. Für den Fastenmonat Ramadan, der in knapp zwei Wochen beginnt, wird eine weitere Eskalation der Gewalt erwartet. ",
+      "sub_headings": [
+        "Verletzte bei Anschlag in Tel Aviv",
+        "Zuvor Palästinenser getötet"
+      ],
+      "thumbnail_image": {
+        "@type": "image_media",
+        "image_link": "https://www.tagesschau.de//multimedia/bilder/israel-tel-aviv-105~_v-videowebm.jpg",
+        "dimensions": {
+          "width": 512,
+          "height": 288
+        }
+      },
+      "tags": [
+        "Israel",
+        "Tel Aviv"
+      ],
+      "recommendations": [
+        {
+          "image": "https://www.tagesschau.de//multimedia/bilder/auto-dschaba-101~_v-klein1x1.jpg",
+          "publish_date": "09.03.2023",
+          "topic": "Westjordanland",
+          "Tag-line": "Wieder Tote nach israelischer Militärrazzia",
+          "short_descryption": "Erst am Dienstag hatten israelische Soldaten in Dschenin bei einem Einsatz mehrere Palästinenser getötet."
+        }
+      ]
+    }
+  },
+  {
+    "response_data": {
+      "Breadcrumbs": [
+        {
+          "index": 0,
+          "page": "home",
+          "url": "/"
+        },
+        {
+          "index": 1,
+          "page": "Ausland",
+          "url": "https://www.tagesschau.de/ausland/"
+        },
+        {
+          "index": 2,
+          "page": "Frankreich: Erneut Risse an Atomreaktoren entdeckt",
+          "url": "https://www.tagesschau.de/ausland/frankreich-akw-schaden-101.html"
+        }
+      ],
+      "HeadLine": "Erneut Risse an Atomreaktoren entdeckt",
+      "tag_line": "Frankreich",
+      "publisher": {
+        "@id": "tagesschau.de",
+        "@type": "NewsMediaOrganization",
+        "name": "tagesschau",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://www.tagesschau.de/res/assets/image/favicon/favicon-96x96.png",
+          "width": {
+            "@type": "Distance",
+            "name": "96 px"
+          },
+          "height": {
+            "@type": "Distance",
+            "name": "96 px"
+          }
+        }
+      },
+      "published_at": "Stand: 10.03.2023 02:58 Uhr",
+      "descryption": "In Frankreich sind erneut Risse an zwei Atomreaktoren entdeckt worden. Diese seien nicht unerheblich, erklärte die Behörde für Atomsicherheit (ASN).  Offenbar handele es sich um Abnutzungserscheinungen. Betroffen seien ein Reaktor im Atomkraftwerk Penly im Norden des Landes und ein weiterer Reaktor in Cattenom in Ostfrankreich.  Erst am Dienstag hatte die ASN bekanntgegeben, dass in Penly ein ungewöhnlich langer und tiefer Riss in einem Leitungsrohr entdeckt worden sei. Es ist der bislang größte entdeckte Korrosionsschaden in einem französischen Atomreaktor.  Wegen anhaltender Probleme mit seinem alternden Atompark hatte Frankreich im vergangenen Jahr so wenig Strom produziert wie seit drei Jahrzehnten nicht. Präsident Emmanuel Macron will noch während seiner Amtszeit den Grundstein für die ersten beiden von sechs neuen Atomreaktoren legen, die in Penly gebaut werden sollen. ",
+      "sub_headings": [
+        "Erneut Risse an Atomreaktoren entdeckt",
+        "Anhaltende Probleme mit alten Meilern"
+      ],
+      "thumbnail_image": {
+        "@type": "image_media",
+        "image_link": "https://www.tagesschau.de//multimedia/bilder/akw-frankreich-103~_v-videowebm.jpg",
+        "dimensions": {
+          "width": 512,
+          "height": 288
+        }
+      },
+      "audio": [
+        {
+          "@type": "audio_media",
+          "link": [
+            "https://media.tagesschau.de/audio/2023/0310/AU-20230310-0704-4300.hi.mp3"
+          ],
+          "Title": "Erneut technische Probleme in französischem AKW",
+          "Author": {
+            "@type": "person",
+            "name": "Julia Borutta"
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "ARD Paris"
+          },
+          "published_at": " 10.3.2023 · 07:04 Uhr"
+        }
+      ],
+      "tags": [
+        "AKW",
+        "Frankreich"
+      ],
+      "recommendations": [
+        {
+          "image": "https://www.tagesschau.de//multimedia/bilder/akw-139~_v-klein1x1.jpg",
+          "publish_date": "18.11.2022",
+          "topic": "Verzögerte AKW-Wartungen",
+          "Tag-line": "Sorge um",
+          "short_descryption": "Weil die Wartung vieler Atomkraftwerke andauert, steigt das Risiko von Energieengpässen im Land."
+        },
+        {
+          "image": "https://www.tagesschau.de//messenger-foto-101~_v-klein1x1.jpg",
+          "publish_date": "15.06.2021",
+          "topic": "Jetzt abonnieren",
+          "Tag-line": "tagesschau direkt auf Ihrem Messenger",
+          "short_descryption": "Seien Sie immer auf dem Laufenden - mit dem Messenger-Angebot der tagesschau."
+        }
+      ]
+    }
+  },
+  {
+    "response_data": {
+      "Breadcrumbs": [
+        {
+          "index": 0,
+          "page": "home",
+          "url": "/"
+        },
+        {
+          "index": 1,
+          "page": "Ausland",
+          "url": "https://www.tagesschau.de/ausland/"
+        },
+        {
+          "index": 2,
+          "page": "Pläne der Netanyahu-Regierung: Israels Präsident Herzog lehnt Justizreform ab",
+          "url": "https://www.tagesschau.de/ausland/israel-justizreform-isaac-herzog-netanjahu-101.html"
+        }
+      ],
+      "HeadLine": "Israels Präsident Herzog lehnt Justizreform ab",
+      "tag_line": "Pläne der Netanyahu-Regierung",
+      "publisher": {
+        "@id": "tagesschau.de",
+        "@type": "NewsMediaOrganization",
+        "name": "tagesschau",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://www.tagesschau.de/res/assets/image/favicon/favicon-96x96.png",
+          "width": {
+            "@type": "Distance",
+            "name": "96 px"
+          },
+          "height": {
+            "@type": "Distance",
+            "name": "96 px"
+          }
+        }
+      },
+      "published_at": "Stand: 10.03.2023 05:41 Uhr",
+      "descryption": "Im Streit um die geplante Justizreform in Israel hat Präsident Isaac Herzog die Regierung aufgefordert, das Projekt zu stoppen. Die Regierungspläne seien eine Gefahr für die Grundfesten unserer Demokratie, sagte der Staatschef in einer Fernsehansprache.  Der Gesetzesentwurf müsse zurückgenommen werden. Gegen die von Ministerpräsident Benjamin Netanyahu angestrebte Justizreform gibt es seit zwei Monaten heftige Proteste. Nach Ansicht der Demonstranten gefährdet das von der rechts-religiösen Regierung geplante Gesetz die Demokratie im Land.  Das geplante Gesetz würde es dem Parlament unter anderem erlauben, Entscheidungen des Obersten Gerichts mit einer einfachen Mehrheit zu widerrufen - und damit dessen Befugnis zur rechtlichen Überprüfung von Gesetzen fast vollständig abschaffen.  Es würde der Regierung zudem die Kontrolle über die Ernennung der Obersten Richter übertragen - derzeit stimmt darüber ein Gremium aus Politikern, Richtern und Mitgliedern der Anwaltskammern ab. ",
+      "sub_headings": [
+        "Israels Präsident Herzog lehnt Justizreform ab",
+        "Gesetz gibt Parlament weitgehende Rechte"
+      ],
+      "thumbnail_image": {
+        "@type": "image_media",
+        "image_link": "https://www.tagesschau.de//multimedia/bilder/herzog-141~_v-videowebm.jpg",
+        "dimensions": {
+          "width": 512,
+          "height": 288
+        }
+      },
+      "video": [
+        {
+          "@type": "video_media",
+          "link": "https://adaptive.tagesschau.de/i/video/2023/0310/TV-20230310-1052-3300.,webl.h264,webs.h264,webm.h264,webxl.h264,webxxl.h264,.mp4",
+          "video_title": "Christian Limpert, ARD Tel Aviv, zum Statement von Israels Staatspräsident Herzog: \"Es erhöht v. a. den Druck auf Benjamin Netanyahu, nun doch irgendeine Form von Kompromiss akzeptieren zu müssen.\"",
+          "Author": {
+            "@type": "Person",
+            "name": "tagesschau24 10:00 Uhr"
+          },
+          "published_at": "10.3.2023"
+        }
+      ],
+      "tags": [
+        "Israel",
+        "Justizreform"
+      ],
+      "recommendations": [
+        {
+          "image": "https://www.tagesschau.de//multimedia/bilder/demo-israel-111~_v-klein1x1.jpg",
+          "publish_date": "11.02.2023",
+          "topic": "Wieder Proteste in Israel",
+          "Tag-line": "Zehntausende gegen Justizreform auf der Straße",
+          "short_descryption": " Die Demonstranten warnen vor einer Aushöhlung der Demokratie."
+        },
+        {
+          "image": "https://www.tagesschau.de//messenger-foto-101~_v-klein1x1.jpg",
+          "publish_date": "15.06.2021",
+          "topic": "Jetzt abonnieren",
+          "Tag-line": "tagesschau direkt auf Ihrem Messenger",
+          "short_descryption": "Seien Sie immer auf dem Laufenden - mit dem Messenger-Angebot der tagesschau."
+        }
+      ]
+    }
+  },
+  {
+    "response_data": {
+      "Breadcrumbs": [
+        {
+          "index": 0,
+          "page": "home",
+          "url": "/"
+        },
+        {
+          "index": 1,
+          "page": "Ausland",
+          "url": "https://www.tagesschau.de/ausland/"
+        },
+        {
+          "index": 2,
+          "page": "Volkskongress in China: Xi für weitere fünf Jahre im Amt bestätigt",
+          "url": "https://www.tagesschau.de/ausland/china-volkskongress-xi-jinping-wiederwahl-101.html"
+        }
+      ],
+      "HeadLine": "Xi für weitere fünf Jahre im Amt bestätigt",
+      "tag_line": "Volkskongress in China",
+      "publisher": {
+        "@id": "tagesschau.de",
+        "@type": "NewsMediaOrganization",
+        "name": "tagesschau",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://www.tagesschau.de/res/assets/image/favicon/favicon-96x96.png",
+          "width": {
+            "@type": "Distance",
+            "name": "96 px"
+          },
+          "height": {
+            "@type": "Distance",
+            "name": "96 px"
+          }
+        }
+      },
+      "published_at": "Stand: 10.03.2023 04:56 Uhr",
+      "descryption": "Der chinesische Volkskongress hat Staats- und Parteichef Xi Jinping für eine ungewöhnliche dritte Amtsperiode als Präsident bestätigt. Erwartungsgemäß stimmten die knapp 3000 handverlesenen Delegierten auf ihrer laufenden Jahrestagung in der Große Halle des Volkes in Peking für eine weitere Verlängerung der Amtszeit um fünf Jahre.  Schon auf dem Parteitag im Oktober hatte sich der 69-Jährige über bisher respektierte Alters- und Amtszeitbegrenzungen hinweggesetzt und sich eine andauernde Führungsrolle in der Parteiverfassung verankern lassen. Er knüpft mit seiner Alleinherrschaft an den Staatsgründer und Revolutionär Mao Tsetung an, der allerdings Chaos über das Land gebracht hatte.  Auf der bis Montag andauernden, gut einwöchigen Jahrestagung wird es die größte Regierungsumbildung seit zehn Jahren geben, wobei vor allem enge Vertraute von Xi Jinping aufrücken werden. Am Samstag soll der frühere Parteichef von Shanghai, Li Qiang, neuer Premier werden. Der 63-Jährige tritt die Nachfolge von Li Keqiang (67) an, der nicht dem Lager von Xi Jinping angehörte und erwartungsgemäß nach zwei Amtszeiten ausscheidet.  Zuvor hatte der Volkskongress die seit langem größte Umorganisation der Regierung in Peking gebilligt. Die Delegierten stimmten auf ihrer gut einwöchigen Jahrestagung in Peking erwartungsgemäß für den Plan der chinesischen Parteiführung zur institutionellen Reform.  Der Umbau ist auch mit Jobkürzungen verbunden: Fünf Prozent der Arbeitsplätze sollen wegfallen, wie aus dem Plan hervorging. Es ist die größte Zahl seit der letzten weitgehenden Restrukturierung 1998.  Eine neue Kommission für die Finanzaufsicht wird geschaffen, die bisherige Funktionen der Zentralbank teilweise übernimmt. Damit soll die Kontrolle von Banken, Versicherungen und innovativen Finanzplattformen sowie der Verbraucherschutz besser koordiniert werden.  Auch wird das Ministerium für Wissenschaft und Technologie umorganisiert sowie eine eigene nationale Behörde zur Verwaltung der zunehmenden Mengen an Daten geschaffen.  Aus chinesischer Sicht versuchen die USA zunehmend, China mit Exportkontrollen, Sanktionen und anderen Beschränkungen den Zugang zu Technologie abzuschneiden. Mit dieser Eindämmungspolitik wollten die USA und der Westen den Aufstieg der zweitgrößten Wirtschaftsmacht der Welt behindern, wie Xi Jinping Anfang der Woche am Rande des Volkskongresses beklagte.  Ende vergangenen Jahres hatte die US-Regierung den Verkauf und Import von Kommunikationsgeräten der chinesischen Smartphonehersteller und Netzwerkausrüster Huawei und ZTE verboten. Diese stellten ein inakzeptables Risiko für die nationale Sicherheit dar, begründete damals die US-Telekommunikationsaufsicht FCC den Schritt.  Zuletzt erwog auch die Bundesregierung ein Verbot von chinesischen Komponenten für das 5G-Netz. Dabei ging es weniger um die Gefahr eines möglichen Datenabflusses, sondern vielmehr die möglichen Folgen der aktuellen extremen Marktmacht chinesischer Anbieter.  Angesichts des internationalen technologischen Wettbewerbs und der ernsten Lage durch externen Druck zur Eindämmung müssen wir unsere technologische Führung und das Managementsystem weiter organisieren, um unsere Stärken besser zu koordinieren und Herausforderungen in technologischen Kernbereichen zu überwinden, hieß es in einem Dokument des Staatsrates zur Restrukturierung. Damit werde China geholfen, beschleunigt technologische Selbstständigkeit auf hohem Niveau zu erreichen. ",
+      "sub_headings": [
+        "Xi für weitere fünf Jahre im Amt bestätigt",
+        "Neue Datenbehörde",
+        "China kritisiert \"Eindämmungspolitik\"",
+        "Deutschland erwägt Verbot chinesischer 5G-Komponenten"
+      ],
+      "thumbnail_image": {
+        "@type": "image_media",
+        "image_link": "https://www.tagesschau.de//multimedia/bilder/xi-jinping-163~_v-videowebm.jpg",
+        "dimensions": {
+          "width": 512,
+          "height": 288
+        }
+      },
+      "audio": [
+        {
+          "@type": "audio_media",
+          "link": [
+            "https://media.tagesschau.de/audio/2023/0310/AU-20230310-0653-0800.hi.mp3"
+          ],
+          "Title": "China: Xi Jinping vom Volkskongress als Staatschef bestätigt",
+          "Author": {
+            "@type": "person",
+            "name": "Benjamin Eyssel"
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "ARD Peking"
+          },
+          "published_at": " 10.3.2023 · 06:53 Uhr"
+        }
+      ],
+      "tags": [
+        "China",
+        "Volkskongress",
+        "USA",
+        "Xi Jinping"
+      ],
+      "recommendations": [
+        {
+          "image": "https://www.tagesschau.de//multimedia/bilder/huawei-193~_v-klein1x1.jpg",
+          "publish_date": "08.03.2023",
+          "topic": "Möglicher Bann gegen Huawei",
+          "Tag-line": "Peking kritisiert deutsche",
+          "short_descryption": "Die Regierung in Peking teilte zum möglichen Verbot mit, sie sei darüber \"verwundert und unzufrieden\"."
+        },
+        {
+          "image": "https://www.tagesschau.de//multimedia/bilder/huawei-logo-passanten-101~_v-klein1x1.jpg",
+          "publish_date": "08.03.2023",
+          "topic": "Globale Sicherheitsbedenken",
+          "Tag-line": "Chinas",
+          "short_descryption": "Weltweit wächst das Misstrauen gegen den chinesischen Technologiekonzern Huawei."
+        },
+        {
+          "image": "https://www.tagesschau.de//multimedia/bilder/xi-jinping-161~_v-klein1x1.jpg",
+          "publish_date": "07.03.2023",
+          "topic": "Chinas Staatschef",
+          "Tag-line": "Xi wirft USA Unterdrückung vor",
+          "short_descryption": "Unter der Führung der USA schotte der Westen China ab und behindere so die wirtschaftliche Entwicklung."
+        },
+        {
+          "image": "https://www.tagesschau.de//huawei-189~_v-klein1x1.jpg",
+          "publish_date": "26.11.2022",
+          "topic": "Sorge über Spionage",
+          "Tag-line": "USA verbannen Huawei-Geräte vom Markt",
+          "short_descryption": "Die USA haben den Import und Verkauf von Geräten namhafter chinesischer Hersteller untersagt."
+        },
+        {
+          "image": "https://www.tagesschau.de//messenger-foto-101~_v-klein1x1.jpg",
+          "publish_date": "15.06.2021",
+          "topic": "Jetzt abonnieren",
+          "Tag-line": "tagesschau direkt auf Ihrem Messenger",
+          "short_descryption": "Seien Sie immer auf dem Laufenden - mit dem Messenger-Angebot der tagesschau."
+        }
+      ]
+    }
+  }

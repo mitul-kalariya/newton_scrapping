@@ -138,7 +138,7 @@ class BFMTVNewsSpider(scrapy.Spider):
         if thumbnail_video:
             embedded_video_links.append(thumbnail_video)
 
-        video_linkes = self.extract_videos_selenium(response.request.url)
+        video_linkes = self.extract_videos(response.request.url)
         if video_linkes:
             embedded_video_links.append(video_linkes)
 
@@ -146,5 +146,5 @@ class BFMTVNewsSpider(scrapy.Spider):
             response_data["embed_video_link"] = embedded_video_links
         return response_data
 
-    def extract_videos_selenium(self, current_url):
+    def extract_videos(self, current_url) -> list:
         return 0

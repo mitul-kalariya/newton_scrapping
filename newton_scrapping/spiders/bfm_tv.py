@@ -8,15 +8,15 @@ class BFMTVNewsSpider(scrapy.Spider):
     name = "bfm_tv"
     start_urls = [
         # "https://www.bfmtv.com/politique/retraites-des-milliers-de-manifestants-dans-tout-le-pays-48-heures-avant-la-greve-du-23-mars_AV-202303210796.html",
-        "https://www.bfmtv.com/politique/elysee/il-n-y-aura-pas-de-reponse-politique-que-va-dire-emmanuel-macron-sur-la-reforme-des-retraites-ce-mercredi_AV-202303210738.html",
+        # "https://www.bfmtv.com/politique/elysee/il-n-y-aura-pas-de-reponse-politique-que-va-dire-emmanuel-macron-sur-la-reforme-des-retraites-ce-mercredi_AV-202303210738.html",
         # "https://www.bfmtv.com/police-justice/je-suis-content-l-enfant-blesse-dans-l-accident-avec-pierre-palmade-raconte-son-retour-chez-lui_AN-202303210703.html",
         # "https://www.bfmtv.com/police-justice/paris-une-enquete-ouverte-pour-des-soupcons-de-violences-policieres-en-marge-d-une-manifestation_AN-202303210705.html",
         # "https://www.bfmtv.com/societe/religions/l-arabie-saoudite-annonce-le-debut-du-ramadan-ce-jeudi_AD-202303210660.html",
-        "https://www.bfmtv.com/economie/economie-social/social/reforme-des-retraites-transports-ecoles-eboueurs-a-quoi-s-attendre-pour-la-journee-du-jeudi-23-mars_AV-202303210442.html",
+        # "https://www.bfmtv.com/economie/economie-social/social/reforme-des-retraites-transports-ecoles-eboueurs-a-quoi-s-attendre-pour-la-journee-du-jeudi-23-mars_AV-202303210442.html",
         # "https://www.bfmtv.com/people/je-pense-aux-victimes-muriel-robin-reagit-pour-la-premiere-fois-a-l-affaire-palmade_AV-202303200832.html",
-        "https://www.bfmtv.com/politique/gouvernement/reforme-des-retraites-pourquoi-le-conseil-constitutionnel-pourrait-en-partie-la-censurer_AN-202303220029.html",
+        # "https://www.bfmtv.com/politique/gouvernement/reforme-des-retraites-pourquoi-le-conseil-constitutionnel-pourrait-en-partie-la-censurer_AN-202303220029.html",
         # "https://www.bfmtv.com/politique/il-met-sans-cesse-de-l-huile-sur-le-feu-les-propos-de-macron-sur-la-foule-qui-n-a-pas-de-legitimite-tres-critiques_AV-202303210810.html",
-        # "https://www.bfmtv.com/politique/elysee/il-n-y-aura-pas-de-reponse-politique-que-va-dire-emmanuel-macron-sur-la-reforme-des-retraites-ce-mercredi_AV-202303210738.html",
+        "https://www.bfmtv.com/politique/elysee/il-n-y-aura-pas-de-reponse-politique-que-va-dire-emmanuel-macron-sur-la-reforme-des-retraites-ce-mercredi_AV-202303210738.html",
     ]
 
     def __init__(self, **kwargs):

@@ -1,9 +1,19 @@
-import os
 import json
 import scrapy
+import logging
 from dateutil import parser
 from datetime import datetime
-from . import utils
+from newton_scrapping import exceptions
+from newton_scrapping.constants import (
+        TODAYS_DATE,
+        SITEMAP_SCHEMA,
+        LOGGER
+    )
+from newton_scrapping.utils import (
+    create_log_file,
+    export_data_to_json_file,
+    validate_sitemap_date_range,
+)
 
 
 class RepublicTvSpider(scrapy.Spider):
@@ -27,19 +37,12 @@ class RepublicTvSpider(scrapy.Spider):
         """
         super().__init__(**kwargs)
         self.start_urls = []
-        self.sitemap_data = []
-        self.article_json_data = []
+        self.articles = []
         self.type = type.lower()
-        # self.start_date = start_date
-        # self.end_date = end_date
-        self.today_date = datetime.today().strftime("%Y-%m-%d")
-        self.links_path = "Links"
-        self.article_path = "Article"
 
-        if not os.path.exists(self.links_path):
-            os.makedirs(self.links_path)
-        if not os.path.exists(self.article_path):
-            os.makedirs(self.article_path)
+        create_log_file()
+
+
 
         self.start_date = (
             datetime.strptime(start_date, "%Y-%m-%d").date() if start_date else None
@@ -50,13 +53,20 @@ class RepublicTvSpider(scrapy.Spider):
         )
 
         if self.type == "sitemap":
-            utils.parse_sitemap_main(self, self.start_urls, start_date, end_date)
+            self.start_urls.append(SITEMAP_SCHEMA)
+            self.start_date = (
+                datetime.strptime(start_date, "%Y-%m-%d").date() if start_date else None
+            )
+            self.end_date = (
+                datetime.strptime(end_date, "%Y-%m-%d").date() if end_date else None
+            )
+            validate_sitemap_date_range(start_date, end_date)
 
         if self.type == "article":
             if url:
                 self.start_urls.append(url)
             else:
-                self.logger.error("Must have a URL to scrap")
+                LOGGER.error("Must have a URL to scrap")
                 raise Exception("Must have a URL to scrap")
 
     def parse(self, response):
@@ -69,17 +79,17 @@ class RepublicTvSpider(scrapy.Spider):
         Raises:
         BaseException: If an error occurs during parsing.
         """
-        self.logger.info("Parse function called on %s", response.url)
+        LOGGER.info("Parse function called on %s", response.url)
         if self.type == "sitemap":
             if self.start_date and self.end_date:
-                self.logger.info("Parse function called on %s", response.url)
-                yield scrapy.Request(response.url, callback=self.parse_by_date)
+                LOGGER.info("Parse function called on %s", response.url)
+                yield scrapy.Request(response.url, callback=self.parse_sitemap_by_dates)
             else:
-                self.logger.info("Parse function called on %s", response.url)
-                yield scrapy.Request(response.url, callback=self.parse_by_date)
+                LOGGER.info("Parse function called on %s", response.url)
+                yield scrapy.Request(response.url, callback=self.parse_sitemap_by_dates)
         elif self.type == "article":
             try:
-                self.logger.debug("Parse function called on %s", response.url)
+                LOGGER.debug("Parse function called on %s", response.url)
                 response_json = self.response_json(response)
                 response_data = utils.response_data(response)
                 data = {
@@ -95,29 +105,29 @@ class RepublicTvSpider(scrapy.Spider):
                     response_data["time_scraped"] = [str(datetime.now())]
                     data["parsed_data"] = response_data
 
-                self.article_json_data.append(data)
+                self.articles.append(data)
 
             except BaseException as e:
                 print(f"Error: {e}")
-                self.logger.error(f"{e}")
+                LOGGER.error(f"{e}")
 
-    def parse_by_date(self, response):
+    def parse_sitemap_by_dates(self, response):
         """
         Parses a webpage response object and yields scrapy requests for each sitemap XML link found.
 
         Yields:
         scrapy.Request: A scrapy request object for each sitemap XML link found in the response.
         """
-        self.logger.info("Parse by date at %s", response.url)
+        LOGGER.info("Parse by date at %s", response.url)
         if "sitemap.xml" in response.url:
             for sitemap in response.xpath(
                 "//sitemap:loc/text()",
-                namespaces={"sitemap": "http://www.sitemaps.org/schemas/sitemap/0.9"},
+                namespaces={"sitemap": SITEMAP_SCHEMA},
             ):
                 if sitemap.get().endswith(".xml"):
                     for link in sitemap.getall():
                         if self.start_date is None and self.end_date is None:
-                            if self.today_date.replace("-", "") in link:
+                            if TODAYS_DATE.replace("-", "") in link:
                                 yield scrapy.Request(link, callback=self.parse_sitemap)
                         else:
                             yield scrapy.Request(link, callback=self.parse_sitemap)
@@ -136,7 +146,7 @@ class RepublicTvSpider(scrapy.Spider):
         The function also extracts the publication date of the sitemap, if available, and
             passes it along as a meta parameter in each request.
         """
-        namespaces = {"n": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+        namespaces = {"n": SITEMAP_SCHEMA}
         links = response.xpath("//n:url/n:loc/text()", namespaces=namespaces).getall()
         published_at = response.xpath('//*[local-name()="lastmod"]/text()').get()
         published_date = parser.parse(published_at).date() if published_at else None
@@ -166,7 +176,7 @@ class RepublicTvSpider(scrapy.Spider):
 
         data = {"link": link, "title": title}
 
-        self.sitemap_data.append(data)
+        self.articles.append(data)
 
     def response_json(self, response) -> dict:
         """
@@ -207,7 +217,7 @@ class RepublicTvSpider(scrapy.Spider):
                 data.append(json.loads(block))
             return data
         except BaseException as e:
-            self.logger.error(f"{e}")
+            LOGGER.error(f"{e}")
             print(f"Error while getting main: {e}")
 
     def get_misc(self, response):
@@ -225,23 +235,30 @@ class RepublicTvSpider(scrapy.Spider):
                 data.append(json.loads(block))
             return data
         except BaseException as e:
-            self.logger.error(f"{e}")
+            LOGGER.error(f"{e}")
             print(f"Error while getting misc: {e}")
 
-    def closed(self, response):
+    def closed(self, reason: any) -> None:
         """
-        Method called when the spider is finished scraping.
-        Saves the scraped data to a JSON file with a timestamp
-        in the filename.
+        store all scrapped data into json file with given date in filename
+        Args:
+            response: generated response
+        Raises:
+            ValueError if not provided
+        Returns:
+            Values of parameters
         """
-        now = datetime.now()
-        timestamp = now.strftime("%Y-%m-%d_%H-%M-%S")
-        if self.type == "sitemap":
-            file_name = f"{self.links_path}/{self.name}-{'sitemap'}-{timestamp}.json"
-            with open(file_name, "w") as f:
-                json.dump(self.sitemap_data, f, indent=4, default=str)
 
-        if self.type == "article":
-            file_name = f"{self.article_path}/{self.name}-{'article'}-{timestamp}.json"
-            with open(file_name, "w") as f:
-                json.dump(self.article_json_data, f, indent=4)
+        try:
+            if not self.articles:
+                self.log("No articles or sitemap url scrapped.", level=logging.INFO)
+            else:
+                export_data_to_json_file(self.type, self.articles, self.name)
+        except Exception as exception:
+            exceptions.ExportOutputFileException(
+                f"Error occurred while writing json file{str(exception)} - {reason}"
+            )
+            self.log(
+                f"Error occurred while writing json file{str(exception)} - {reason}",
+                level=logging.ERROR,
+            )

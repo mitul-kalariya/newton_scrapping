@@ -7,9 +7,10 @@ class InvalidDateException(Exception):
     pass
 
 
-class InvalidInputException(Exception):
-    """Raise when invalid input is given"""
+class InvalidArgumentException(Exception):
+    """Raise when invalid date is passed"""
 
+    # Use InvalidDateException("Please enter valid date")
     pass
 
 

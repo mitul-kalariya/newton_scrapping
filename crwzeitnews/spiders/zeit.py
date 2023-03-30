@@ -17,7 +17,7 @@ from crwzeitnews.utils import (
     get_raw_response,
     get_parsed_data,
     get_parsed_json,
-    remove_popup
+    # remove_popup
 )
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -46,17 +46,6 @@ class BaseSpider(ABC):
 
 class ZeitSpider(scrapy.Spider,BaseSpider):
     name = "zeit"
-    start_urls = [
-        # "https://www.zeit.de/wirtschaft/2023-03/ifo-export-barometer",# normal article 
-        # "https://www.zeit.de/politik/deutschland/2023-03/koalitionsausschuss-ampel-koalition-unterbrechung-ergebnisse", # article with paid subscriptions
-        # "https://www.zeit.de/sport/2023-03/deutschland-belgien-hansi-flick-kevin-de-bruyne", # article with paid subscriptions
-        # "https://www.zeit.de/politik/2023-03/ukraine-panzer-leopard-2-nachrichtenpodcast", # article containing video
-        # #extras
-        # "https://www.zeit.de/politik/ausland/2023-03/ukraine-ueberblick-biden-atomwaffen-russland-nord-stream-2-adoptionen"
-        # "https://www.zeit.de/wirtschaft/unternehmen/2023-03/kartellamt-microsoft-aufsicht-monopol"
-        # "https://www.zeit.de/kultur/2023-03/mixed-people-multiethnische-menschen-hautfarbe-identitaet-minitta-kandlbauer"
-        # "https://www.zeit.de/politik/ausland/2023-03/taiwan-kampf-china-tsai-ing-wen-5vor8",
-    ]
 
     def __init__(self, type=None, start_date=None, url=None, end_date=None, *args, **kwargs):
         """
@@ -117,17 +106,15 @@ class ZeitSpider(scrapy.Spider,BaseSpider):
                     EC.presence_of_element_located((By.XPATH,
                                                     '//article[@id="js-article"]')))
                 if article:
-                    yield scrapy.Request(response.url, callback=self.parse_article)
+            
+                    html_string = driver.execute_script("return document.getElementsByTagName('html')[0].innerHTML")
+                    selector = Selector(text=html_string)
+                    self.parse_article(selector)
+                    driver.quit()
 
-                    articledata_loader = ItemLoader(item=ArticleData(), response=response)
-                    return articledata_loader.item
+        except BaseException as e:
+            print("/n/n",e)
 
-
-        except BaseException as exception_:
-            print(f"\n\n\n ===> {exception_}")
-
-        finally:
-            driver.quit()
 
     def parse(self,response):
         
@@ -139,35 +126,11 @@ class ZeitSpider(scrapy.Spider,BaseSpider):
                 yield scrapy.Request(response.url, callback=self.parse_sitemap)
 
         elif self.type == "article":
-            chrome_options = Options()
-            # chrome_options.add_argument("--headless")
-            service = Service(executable_path=ChromeDriverManager().install())
-            driver = webdriver.Chrome(service=service, options=chrome_options)
-            driver.get(response.url)
+            self.remove_popup(response)
+            articledata_loader = ItemLoader(item=ArticleData(), response=response)
+            return articledata_loader.item
 
-            try:
-                element =  WebDriverWait(driver, 3).until(
-                        EC.presence_of_element_located((By.XPATH,
-                                                        '//*[@id="main"]/div/article/div/section[2]/div[1]/div')))
-                banner_button = driver.find_element(By.XPATH, '//*[@id="main"]/div/article/div/section[2]/div[1]/div')
-                if element:
-                    banner_button.click()
-                    article = WebDriverWait(driver, 3).until(
-                        EC.presence_of_element_located((By.XPATH,
-                                                      '//article[@id="js-article"]')))
-                    if article:
-                        breakpoint()
-                        # response_ = scrapy.Request(response.url)
-                        html = driver.execute_script("return document.getElementsByTagName('html')[0].innerHTML")
-                        selector = Selector(text=html)
-                        self.parse_article(selector)
-                        articledata_loader = ItemLoader(item=ArticleData(), response=response)
-                        return articledata_loader.item
 
-            except BaseException as e:
-                print("/n/n",e)
-
-    
     def parse_sitemap(self, response: str) -> None:
         pass
 
@@ -188,16 +151,16 @@ class ZeitSpider(scrapy.Spider,BaseSpider):
             and time scraped.
         """
         articledata_loader = ItemLoader(item=ArticleData(), response=response)
-        # raw_response = get_raw_response(response)
-        # response_json = get_parsed_json(response)
+        raw_response = get_raw_response(response)
+        response_json = get_parsed_json(response)
         response_data = get_parsed_data(response)
         
 
-        # articledata_loader.add_value("raw_response", raw_response)
-        # articledata_loader.add_value(
-        #     "parsed_json",
-        #     response_json,
-        # )
+        articledata_loader.add_value("raw_response", raw_response)
+        articledata_loader.add_value(
+            "parsed_json",
+            response_json,
+        )
         articledata_loader.add_value("parsed_data", response_data)
 
         self.articles.append(dict(articledata_loader.load_item()))

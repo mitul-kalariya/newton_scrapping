@@ -83,7 +83,7 @@ def get_parsed_json(response):
     ld_json_data = response.css('script[type="application/ld+json"]::text').getall()
     for a_block in ld_json_data:
         data = json.loads(a_block)
-        if data.get("@type") == "NewsArticle":
+        if data.get("@type") == "Article":
             parsed_json["main"] = data
         elif data.get("@type") == "ImageGallery":
             parsed_json["ImageGallery"] = data
@@ -135,7 +135,7 @@ def get_misc(response):
     """
     try:
         data = []
-        misc = response.css('script[type="application/ld+json"]::text').getall()
+        misc = response.css('script[type="application/json"]::text').getall()
         for block in misc:
             data.append(json.loads(block))
         return data
@@ -160,75 +160,47 @@ def get_parsed_data(response):
          - 'text': (list) The list of text paragraphs in the article.
          - 'images': (list) The list of image URLs in the article, if available. (using bs4)
     """
-    # try:
-    main_dict = {}
-    pattern = r"[\r\n\t\"]+"
-    main_data = get_misc(response)
-    print(main_data)
-    breakpoint()
-    imp_ld_json_data = get_main(response)
-    article_json = imp_ld_json_data.get("article")
-    webpage_json = imp_ld_json_data.get("WebPage")
-    if article_json:
-        main_dict["author"] =  article_json.get("author")
-        main_dict["description"] = article_json.get("description")
-        main_dict["modified_at"] = article_json.get("dateModified")
-        main_dict["published_at"] = article_json.get("datePublished")
-        main_dict["publisher"] = article_json.get("publisher")
-        main_dict["text"] = article_json.get("articleBody")
-        if webpage_json:
-            main_dict["thumbnail_image"] = extract_thumbnail_image(webpage_json)
-        main_dict["title"] = article_json.get("headline")
-        main_dict["tags"] = article_json.get("keywords")
-        
-    return remove_empty_elements(main_dict)
+    try:
+        main_dict = {}
+        main_data = get_misc(response)
+        print(main_data)
+        imp_ld_json_data = get_main(response)
+        article_json = imp_ld_json_data.get("article")
+        webpage_json = imp_ld_json_data.get("WebPage")
+        if article_json:
+            main_dict["author"] =  article_json.get("author")
+            main_dict["description"] = article_json.get("description")
+            main_dict["modified_at"] = article_json.get("dateModified")
+            main_dict["published_at"] = article_json.get("datePublished")
+            main_dict["publisher"] = article_json.get("publisher")
+            main_dict["text"] = article_json.get("articleBody")
+            if webpage_json:
+                main_dict["thumbnail_image"] = extract_thumbnail_image(webpage_json)
+            main_dict["title"] = article_json.get("headline")
+            main_dict["tags"] = article_json.get("keywords")
+            mapper = {"de": "German"}
+            article_lang = response.css("html::attr(lang)").get()
+            main_dict["source_language"] = [mapper.get(article_lang)]
+            main_dict["source_country"] = ["Germany"]
+            main_dict["time_scraped"] = [str(datetime.now())]
+            print(main_dict)
+        return remove_empty_elements(format_dictionary(main_dict))
   
-    # meta_data = response.css("script.kilkaya_meta").get()
-
-
-    # except BaseException as e:
-    #     LOGGER.error(f"{e}")
-    #     raise exceptions.ArticleScrappingException(f"Error while fetching parsed_data data: {e}")
+    except BaseException as e:
+        LOGGER.error(f"{e}")
+        raise exceptions.ArticleScrappingException(f"Error while fetching parsed_data data: {e}")
 
       
-def convert_values_to_lists(raw_dictonary):
-    for key, value in raw_dictonary.items():
+def format_dictionary(raw_dictionary):
+    for key, value in raw_dictionary.items():
         if not isinstance(value, list):
-            raw_dictonary[key] = [value]
-    return raw_dictonary
+            raw_dictionary[key] = [value]
+    return raw_dictionary
 
 def extract_thumbnail_image(webpage_json):
-    image_object_dict = webpage_json("primaryImageOfPage")
+    image_object_dict = webpage_json.get("primaryImageOfPage")
     if image_object_dict:
         return image_object_dict.get("url")
-    
-def get_publisher(response):
-    pass
-
-# def remove_popup(url) -> bool:
-    # # breakpoint()
-    # chrome_options = Options()
-    # # chrome_options.add_argument("--headless")
-    # service = Service(executable_path=ChromeDriverManager().install())
-    # driver = webdriver.Chrome(service=service, options=chrome_options)
-    # driver.get(url)
-    # try:
-
-    #     element =  WebDriverWait(driver, 3).until(
-    #             EC.presence_of_element_located((By.XPATH,
-    #                                             '//*[@id="main"]/div/article/div/section[2]/div[1]/div')))
-    #     banner_button = driver.find_element(By.XPATH, '//*[@id="main"]/div/article/div/section[2]/div[1]/div')
-    #     # breakpoint()
-    #     if element:
-    #         banner_button.click()
-    #         article = WebDriverWait(driver, 3).until(
-    #             EC.presence_of_element_located((By.XPATH,
-    #                                             '//article[@id="js-article"]')))
-    #         if article:
-    #             return True
-
-    # except BaseException as exception_:
-    #     print(f"\n\n\n ===> {exception_}")
 
 
 

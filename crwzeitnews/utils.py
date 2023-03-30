@@ -7,7 +7,8 @@ import time
 import requests
 from io import BytesIO
 from PIL import Image
-from datetime import datetime,timedelta
+from datetime import datetime
+from crwzeitnews import exceptions
 from crwzeitnews.constant import TODAYS_DATE,LOGGER
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -16,16 +17,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
-from crwzeitnews.exceptions import *
 
 language_mapper = {"de": "Germany", "en": "English"}
-
-
-ERROR_MESSAGES = {
-    "InputMissingException": "{} field is required.",
-    "InvalidDateException": "Please provide valid date.",
-    "InvalidArgumentException": "Please provide a valid arguments.",
-}
 
 def create_log_file():
     logging.basicConfig(
@@ -36,101 +29,6 @@ def create_log_file():
         datefmt="%Y-%m-%d %H:%M:%S",
     )
 
-
-def based_on_scrape_type(
-    scrape_type: str, scrape_start_date: datetime, scrape_end_date: datetime, url: str
-) -> datetime:
-    """
-    check scrape type and based on the type pass it to the validated function,
-    after validation return required values.
-
-     Args:
-         scrape_type: Name of the scrape type
-         scrape_start_date (datetime): scrapping start date
-         scrape_end_date (datetime): scrapping end date
-         url: url to be used
-
-     Returns:
-         datetime: if scrape_type is sitemap
-         list: if scrape_type is sitemap
-    """
-    if scrape_type == "sitemap":
-        scrape_start_date, scrape_end_date = sitemap_validations(
-            scrape_start_date, scrape_end_date, url
-        )
-        date_range_lst = []
-        date_range_lst.extend(iter(date_range(scrape_start_date, scrape_end_date)))
-        return date_range_lst
-
-    return validate_arg("MISSING_REQUIRED_FIELD", None, "type")
-
-
-
-def date_range(start_date: datetime, end_date: datetime) -> None:
-    """
-    Return range of all date between given date
-    if not end_date then take start_date as end date
-
-    Args:
-        start_date (datetime): scrapping start date
-        end_date (datetime): scrapping end date
-    Returns:
-        Value of parameter
-    """
-    for date in range(int((end_date - start_date).days) + 1):
-        yield (start_date + timedelta(date)).strftime("%Y-%m-%d")
-
-
-def sitemap_validations(
-    scrape_start_date: datetime, scrape_end_date: datetime, article_url: str
-) -> datetime:
-    """
-    Validate the sitemap arguments
-    Args:
-        scrape_start_date (datetime): scrapping start date
-        scrape_end_date (datetime): scrapping end date
-        article_url (str): article url
-    Returns:
-        date: return current date if user not passed any date parameter
-    """
-    if scrape_start_date and scrape_end_date:
-        validate_arg(InvalidDateException, not scrape_start_date > scrape_end_date)
-        validate_arg(
-            InvalidDateException,
-            int((scrape_end_date - scrape_start_date).days) <= 30,
-        )
-    else:
-        validate_arg(
-            InputMissingException,
-            not (scrape_start_date or scrape_end_date),
-            "start_date and end_date",
-        )
-        scrape_start_date = scrape_end_date = datetime.now().date()
-
-    validate_arg(
-        InvalidArgumentException, not article_url, "url is not required for sitemap."
-    )
-
-    return scrape_start_date, scrape_end_date
-
-
-
-
-def validate_arg(param_name, param_value, custom_msg=None) -> None:
-    """
-    Validate the param.
-
-    Args:
-        param_name: Name of the parameter to be validated
-        param_value: Value of the required parameter
-
-    Raises:
-        ValueError if not provided
-    Returns:
-          Value of parameter
-    """
-    if not param_value:
-        raise param_name(ERROR_MESSAGES[param_name.__name__].format(custom_msg))
 
 def export_data_to_json_file(scrape_type: str, file_data: str, file_name: str) -> None:
     """

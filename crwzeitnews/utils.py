@@ -183,8 +183,8 @@ def get_parsed_data(response):
             main_dict["source_language"] = [mapper.get(article_lang)]
             main_dict["source_country"] = ["Germany"]
             main_dict["time_scraped"] = [str(datetime.now())]
-            print(main_dict)
-        return remove_empty_elements(format_dictionary(main_dict))
+            main_dict = format_dictionary(main_dict)
+        return remove_empty_elements(main_dict)
   
     except BaseException as e:
         LOGGER.error(f"{e}")

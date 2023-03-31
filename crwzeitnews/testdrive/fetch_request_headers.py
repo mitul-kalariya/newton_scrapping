@@ -32,7 +32,7 @@ chrome_options = Options()
 # chrome_options.add_argument("--headless")
 service = Service(executable_path=ChromeDriverManager().install())
 driver = webdriver.Chrome(service=service, options=chrome_options)
-driver.get("https://www.zeit.de/politik/ausland/karte-ukraine-krieg-russland-frontverlauf-truppenbewegungen")
+driver.get("https://www.zeit.de/index")
 time.sleep(5)
 
 try:
@@ -41,15 +41,16 @@ try:
                                         '//*[@id="main"]/div/article/div/section[2]/div[1]/div')))
     banner_button = driver.find_element(By.XPATH, '//*[@id="main"]/div/article/div/section[2]/div[1]/div')
     if element:
+
         banner_button.click()
         article = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.XPATH,
-                                            '//article[@id="js-article"]')))
+                                            '/html/body/div[3]')))
+                                            # '//article[@id="js-article"]')))
         if article:
             data = []
-            html_string = driver.execute_script("return document.getElementsByTagName('html')[0].innerHTML")
             for request in driver.requests:
-                if "https://www.zeit.de/politik/ausland/karte-ukraine-krieg-russland-frontverlauf-truppenbewegungen" in str(request.url) and "cookie:" in str(request.headers) :
+                if "https://www.zeit.de/index" in str(request.url) and "cookie:" in str(request.headers):
                     headers |= get_headers(str(request.headers))
                     print(headers)
                     print(str(request.headers).split("cookie:"))

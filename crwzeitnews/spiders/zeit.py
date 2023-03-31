@@ -120,7 +120,7 @@ class ZeitSpider(scrapy.Spider,BaseSpider):
       
 
     def parse(self,response):
-        
+
         if self.type == "sitemap":
             if self.start_date and self.end_date:
                 LOGGER.info("Parse function called on %s", response.url)

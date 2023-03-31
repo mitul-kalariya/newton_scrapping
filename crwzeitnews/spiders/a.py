@@ -36,10 +36,9 @@ class a_spider(scrapy.Spider):
                    'referer': 'https://www.zeit.de/zustimmung?url=https%3A%2F%2Fwww.zeit.de%2Fpolitik%2Fausland%2Fkarte-ukraine-krieg-russland-frontverlauf-truppenbewegungen',
                    'accept-encoding': 'gzip, deflate, br', 'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8',
         }
-
-        cookie_string = 'creid=1761880315003170047; _k5a=61@{"u":[{"uid":"TIq4ITCaXvHrWQ2z","ts":1680260007},1680350007]}; wt_fa=lv~1680260007789|1695812007789#cv~1|1695812007789#fv~1680260007789|1695812007789#; wt_fa_s=start~1|1711796007790#; wteid_981949533494636=4168026000800950088; wtsid_981949533494636=1; _sp_v1_uid=1:432:876f1249-65ad-46fd-b836-33dd5b9fec72; _sp_v1_ss=1:H4sIAAAAAAAAAItWqo5RKimOUbKKRmbkgRgGtbE6MUqpIGZeaU4OkF0CVlBdi1tCKRYAmuD4I1IAAAA%3D; _sp_su=false; _sp_enable_dfp_personalized_ads=true; consentUUID=b18a6fa5-f2b0-43a8-a282-6edf1f0d9949_18; consentDate=2023-03-31T10:53:42.081Z; _sp_v1_data=2:532696:1680260010:0:1:-1:1:0:0:_:-1; _sp_v1_opt=1:login|true:last_id|11:; _sp_v1_csv=; _sp_v1_lt=1:; zonconsent=2023-03-31T10:53:42.454Z; wt_rla=981949533494636%2C2%2C1680260007792'
+        cookie_string = 'creid=1761891441443194415; _k5a=61@{"u":[{"uid":"kXb0YZhbZgmWaE12","ts":1680270618},1680360618]}; wt_fa=lv~1680270618944|1695822618944#cv~1|1695822618945#fv~1680270618946|1695822618946#; wt_fa_s=start~1|1711806618947#; wteid_981949533494636=4168027061900569888; wtsid_981949533494636=1; _sp_v1_uid=1:799:ce56a9e8-0b43-499a-adce-177cefeceb10; _sp_v1_ss=1:H4sIAAAAAAAAAItWqo5RKimOUbKKRmbkgRgGtbE6MUqpIGZeaU4OkF0CVlBdi1tCKRYAmuD4I1IAAAA%3D; _sp_su=false; _sp_enable_dfp_personalized_ads=true; consentUUID=1e7fb635-9b0f-4aae-88b8-f5cfee8d6352_18; consentDate=2023-03-31T13:50:28.061Z; _sp_v1_data=2:532696:1680270437:0:1:-1:1:0:0:_:-1; _sp_v1_opt=1:login|true:last_id|11:; _sp_v1_csv=; _sp_v1_lt=1:; zonconsent=2023-03-31T13:50:28.478Z; wt_rla=981949533494636%2C2%2C1680270618956'
         req = scrapy.Request(
-            "https://www.zeit.de/politik/ausland/2023-03/usa-schweigegeld-anklage-donald-trump-spenden",
+            "https://www.zeit.de/gsitemaps/index.xml",
             headers=headers, cookies=self.parse_cookies(cookie_string), callback=self.parse)
         yield req
 

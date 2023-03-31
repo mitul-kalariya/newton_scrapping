@@ -13,7 +13,7 @@ from abc import ABC, abstractmethod
 from crwzeitnews.items import ArticleData
 from crwzeitnews.utils import (
     create_log_file,
-    # validate_sitemap_date_range,
+    validate_sitemap_date_range,
     export_data_to_json_file,
     get_raw_response,
     get_parsed_data,
@@ -72,7 +72,7 @@ class ZeitSpider(scrapy.Spider,BaseSpider):
         create_log_file()
 
         if self.type == "sitemap":
-            self.start_urls.append("https://globalnews.ca/news-sitemap.xml")
+            self.start_urls.append("https://www.zeit.de/gsitemaps/index.xml")
             self.start_date = (
                 datetime.strptime(start_date, "%Y-%m-%d").date() if start_date else None
             )

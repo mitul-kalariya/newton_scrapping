@@ -4,12 +4,14 @@ import ast
 import json
 import logging
 import time
+from typing import Dict, List, Any
+
 import requests
 from io import BytesIO
 from PIL import Image
 from datetime import datetime
 from crwzeitnews import exceptions
-from crwzeitnews.constant import TODAYS_DATE,LOGGER
+from crwzeitnews.constant import TODAYS_DATE, LOGGER
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
@@ -19,6 +21,7 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 
 language_mapper = {"de": "Germany", "en": "English"}
+
 
 def create_log_file():
     logging.basicConfig(
@@ -119,7 +122,7 @@ def get_parsed_json(response):
             parsed_json["VideoObject"] = data
         else:
             other_data.append(data)
-    
+
     parsed_json["Other"] = other_data
     misc = get_misc(response)
     if misc:
@@ -137,7 +140,7 @@ def get_main(response):
         main data
     """
     try:
-        
+
         information = {}
         main = response.css('script[type="application/ld+json"]::text').getall()
         for block in main:
@@ -174,7 +177,6 @@ def get_misc(response):
     except BaseException as e:
         LOGGER.error(f"{e}")
         print(f"Error while getting misc: {e}")
-
 
 
 def get_parsed_data_dict() -> dict:
@@ -243,7 +245,7 @@ def get_parsed_data_dict() -> dict:
 #             main_dict["time_scraped"] = [str(datetime.now())]
 #             main_dict = format_dictionary(main_dict)
 #         return remove_empty_elements(main_dict)
-  
+
 #     except BaseException as e:
 #         LOGGER.error(f"{e}")
 #         raise exceptions.ArticleScrappingException(f"Error while fetching parsed_data data: {e}")
@@ -259,7 +261,7 @@ def get_parsed_data(response: str) -> dict:
     Returns:
         Dictionary with Parsed json response from generated data
     """
-   
+
     imp_ld_json_data = get_main(response)
     article_json = imp_ld_json_data.get("article")
     webpage_json = imp_ld_json_data.get("WebPage")
@@ -309,8 +311,8 @@ def get_language_details(response: str) -> dict:
     }
 
 
-
-def get_author_details(parsed_data: list, response: str) -> dict:
+def get_author_details(parsed_data: list, response: str) -> dict[str, list[
+    dict[str, Any] | dict[str, Any] | None | Any]] | None:
     """
     Return author related details
     Args:
@@ -412,21 +414,54 @@ def get_thumbnail_image_video(response: str, webpage_json: dict) -> dict:
     video_urls = response.css("video::attr(src)").getall()
     thumbnail_json = webpage_json.get("primaryImageOfPage")
     if thumbnail_json:
-        thumbnail_url = [thumbnail_json.get("url")] 
+        thumbnail_url = [thumbnail_json.get("url")]
     return {
         "embed_video_link": video_urls,
         "thumbnail_image": thumbnail_url
     }
 
-      
+
 def format_dictionary(raw_dictionary):
     for key, value in raw_dictionary.items():
         if not isinstance(value, list):
             raw_dictionary[key] = [value]
     return raw_dictionary
 
+
 def extract_thumbnail_image(webpage_json):
     image_object_dict = webpage_json.get("primaryImageOfPage")
     if image_object_dict:
         return image_object_dict.get("url")
 
+
+def validate_sitemap_date_range(start_date, end_date):
+    """validated date range given by user
+
+    Args:
+        start_date (str): start_date
+        end_date (str): end_date
+
+    """
+    start_date = (
+        datetime.strptime(start_date, "%Y-%m-%d").date() if start_date else TODAYS_DATE
+    )
+    end_date = datetime.strptime(end_date, "%Y-%m-%d").date() if end_date else TODAYS_DATE
+    try:
+        if (start_date and not end_date) or (not start_date and end_date):
+            raise exceptions.InvalidDateException(
+                "start_date or end_date must be specified"
+            )
+
+        if start_date and end_date and start_date > end_date:
+            raise exceptions.InvalidDateException(
+                "start_date should not be later than end_date"
+            )
+
+        if start_date > TODAYS_DATE or end_date > TODAYS_DATE:
+            raise exceptions.InvalidDateException(
+                "start_date and end_date should not be greater than today_date"
+            )
+
+    except exceptions.InvalidDateException as e:
+        LOGGER.error(f"Error while validating daterange in __init__: {e}", exc_info=True)
+        raise exceptions.InvalidDateException(f"Error while validating daterange in __init__: {e}")

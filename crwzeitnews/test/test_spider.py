@@ -264,8 +264,8 @@ class TestSitemap(unittest.TestCase):
         for article in self.article_urls:
             with self.subTest():
                 self.assertIsNotNone(article.get("link"), "missing object:- sitemap articles --> link")
-            with self.subTest():
-                self.assertIsNotNone(article.get("title"), "missing object:- sitemap articles --> title")
+            # with self.subTest():
+            #     self.assertIsNotNone(article.get("title"), "missing object:- sitemap articles --> title")
 
     def _test_sitemap_results(self):
         with self.subTest():

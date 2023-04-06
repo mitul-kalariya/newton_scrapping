@@ -11,7 +11,7 @@ TEST_ARTICLES = [
         "test_data_path": "crwzeitnews/test/data/test_article_2.json",
     },
     {
-        "url": "https://www.zeit.de/arbeit/2023-04/arbeitszeitbetrug-angestellte-kuendigung",
+        "url": "https://www.zeit.de/arbeit/2023-04/arbeitszeitbetrug-angestellte-kuendigung",# paid subscription article
         "test_data_path": "crwzeitnews/test/data/test_article_3.json",
     },
 ]

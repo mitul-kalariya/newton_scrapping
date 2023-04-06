@@ -7,10 +7,9 @@ class InvalidDateException(Exception):
     pass
 
 
-class InvalidArgumentException(Exception):
-    """Raise when invalid date is passed"""
+class InvalidInputException(Exception):
+    """Raise when invalid input is given"""
 
-    # Use InvalidDateException("Please enter valid date")
     pass
 
 
@@ -62,4 +61,9 @@ class URLNotFoundException(Exception):
 
     # Use URLNotFoundException(f"Given {url} not found for website {website_name}
     # with status code{response.status_code}")
+    pass
+
+class RequestHeadersException(Exception):
+    """raise when getting error in request headers or cookies"""
+
     pass

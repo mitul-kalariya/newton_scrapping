@@ -1,15 +1,19 @@
-import scrapy
+"""Spider to scrap ZEIT news website"""
+import re
 import logging
-import time
+from abc import ABC, abstractmethod
 from datetime import datetime
-from lxml import etree
-from scrapy.crawler import CrawlerProcess
-from scrapy.utils.project import get_project_settings
-from crwzeitnews import exceptions
+
+import scrapy
+from scrapy.http import XmlResponse
 from scrapy.loader import ItemLoader
 from scrapy.selector import Selector
-from crwzeitnews.constant import TODAYS_DATE, LOGGER
-from abc import ABC, abstractmethod
+
+from crwzeitnews.constant import (
+    TODAYS_DATE,
+    LOGGER,
+)
+from crwzeitnews import exceptions
 from crwzeitnews.items import ArticleData
 from crwzeitnews.utils import (
     create_log_file,
@@ -18,68 +22,74 @@ from crwzeitnews.utils import (
     get_raw_response,
     get_parsed_data,
     get_parsed_json,
-    # remove_popup
+    get_request_headers,
 )
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
 
 
 class BaseSpider(ABC):
+    """Abstract Base class for scrapy spider
+
+    Args:
+        ABC : Abstract
+    """
+    # pylint disable=unnecessary-pass
     @abstractmethod
-    def parse(response):
+    def parse(self,response):
+        """parse function responsible for calling individual methods for each request"""
         pass
 
     @abstractmethod
     def parse_sitemap(self, response: str) -> None:
+        """called by parse function when response is sitemap"""
         pass
 
     def parse_sitemap_article(self, response: str) -> None:
+        """called by parse function when response is sitemap article"""
         pass
 
     @abstractmethod
     def parse_article(self, response: str) -> list:
+        """called by parse function when response is article"""
         pass
 
-class ZeitSpider(scrapy.Spider,BaseSpider):
+
+class ZeitSpider(scrapy.Spider, BaseSpider):
+    """main spider for parsing sitemap or article"""
+    # pylint: disable=too-many-instance-attributes
     name = "zeit"
 
-    def __init__(self, type=None, start_date=None, url=None, end_date=None, *args, **kwargs):
+    def __init__(self, *args, type=None, since=None, url=None, until=None, **kwargs):
+        # pylint: disable=redefined-builtin
         """
-        A spider to crawl globalnews.ca for news articles. The spider can be initialized with two modes:
+        A spider to crawl globalnews.ca for news articles.
+        The spider can be initialized with two modes:
         1. Sitemap mode: In this mode, the spider will crawl the news sitemap of globalnews.ca
         and scrape articles within a specified date range.
         2. Article mode: In this mode, the spider will scrape a single article from a specified URL.
 
         Attributes:
             name (str): The name of the spider.
-            type (str): The mode of the spider. Possible values are 'sitemap' and 'article'.
-            start_date (str): The start date of the date range for sitemap mode. Should be in 'YYYY-MM-DD' format.
-            end_date (str): The end date of the date range for sitemap mode. Should be in 'YYYY-MM-DD' format.
+            type (str): The mode of the spider.
+                        Possible values are 'sitemap' and 'article'.
+            start_date (str): The start date of the date range for sitemap mode.
+                              Should be in 'YYYY-MM-DD' format.
+            end_date (str): The end date of the date range for sitemap mode.
+                            Should be in 'YYYY-MM-DD' format.
             url (str): The URL of the article to scrape in article mode.
         """
-        super(ZeitSpider,self).__init__(*args,**kwargs)
+        super().__init__(*args, **kwargs)
 
-        self.output_callback = kwargs.get('args', {}).get('callback', None)
+        self.output_callback = kwargs.get("args", {}).get("callback", None)
         self.start_urls = []
         self.articles = []
         self.article_url = url
         self.type = type.lower()
         create_log_file()
-
         if self.type == "sitemap":
             self.start_urls.append("https://www.zeit.de/gsitemaps/index.xml")
-            self.start_date = (
-                datetime.strptime(start_date, "%Y-%m-%d").date() if start_date else None
-            )
-            self.end_date = (
-                datetime.strptime(end_date, "%Y-%m-%d").date() if end_date else None
-            )
-            validate_sitemap_date_range(start_date, end_date)
+            self.since = datetime.strptime(since, "%Y-%m-%d").date() if until else None
+            self.until = datetime.strptime(until, "%Y-%m-%d").date() if until else None
+            validate_sitemap_date_range(since, until)
 
         if self.type == "article":
             if url:
@@ -88,60 +98,45 @@ class ZeitSpider(scrapy.Spider,BaseSpider):
                 LOGGER.error("Must have a URL to scrap")
                 raise Exception("Must have a URL to scrap")
 
-    def remove_popup(self, response) -> None:
+        # collecting request headers from target website index page
+        request_headers = get_request_headers()
+        self.valid_cookie = request_headers.get("cookie")
+        self.valid_request_headers = request_headers
+        self.start_requests()
 
-        chrome_options = Options()
-        # chrome_options.add_argument("--headless")
-        service = Service(executable_path=ChromeDriverManager().install())
-        driver = webdriver.Chrome(service=service, options=chrome_options)
-        driver.get(response.url)
-        time.sleep(5)
-        try:
-            element =  WebDriverWait(driver, 10).until(
-                    EC.presence_of_element_located((By.XPATH,
-                                                    '//*[@id="main"]/div/article/div/section[2]/div[1]/div')))
-            banner_button = driver.find_element(By.XPATH, '//*[@id="main"]/div/article/div/section[2]/div[1]/div')
-            if element:
-                banner_button.click()
-                article = WebDriverWait(driver, 10).until(
-                    EC.presence_of_element_located((By.XPATH,
-                                                    '//article[@id="js-article"]')))
-                if article:
-            
-                    html_string = driver.execute_script("return document.getElementsByTagName('html')[0].innerHTML")
-                    selector = Selector(text=html_string)
-                    self.parse_article(selector)
-                    driver.quit()
+    def start_requests(self):
+        yield scrapy.Request(
+            self.start_urls[0],
+            headers=self.valid_request_headers,
+            cookies=self.valid_cookie,
+            callback=self.parse,
+        )
 
-        except BaseException as e:
-            print("/n/n",e)
-            driver.quit()
-
-      
-
-    def parse(self,response):
-
+    def parse(self, response, **kwargs):
         if self.type == "sitemap":
-            if self.start_date and self.end_date:
+            if self.since and self.until:
                 LOGGER.info("Parse function called on %s", response.url)
-                yield scrapy.Request(response.url, callback=self.parse_sitemap)
+                yield scrapy.Request(
+                    response.url,
+                    headers=self.valid_request_headers,
+                    cookies=self.valid_cookie,
+                    callback=self.parse_sitemap,
+                    dont_filter=True,
+                )
             else:
-                yield scrapy.Request(response.url, callback=self.parse_sitemap)
+                yield scrapy.Request(
+                    response.url,
+                    headers=self.valid_request_headers,
+                    cookies=self.valid_cookie,
+                    callback=self.parse_sitemap,
+                    dont_filter=True,
+                )
 
         elif self.type == "article":
-            self.remove_popup(response)
-            articledata_loader = ItemLoader(item=ArticleData(), response=response)
-            return articledata_loader.item
+            article_data = self.parse_article(response)
+            yield article_data
 
-
-    def parse_sitemap(self, response: str) -> None:
-        pass
-
-    def parse_sitemap_article(self, response: str) -> None:
-        pass
-
-
-    def parse_article(self, response) -> list:
+    def parse_article(self, response: str) -> list:
         """
         Parses the article data from the response object and returns it as a dictionary.
 
@@ -153,22 +148,103 @@ class ZeitSpider(scrapy.Spider,BaseSpider):
             parsed JSON, and parsed data, along with additional information such as the country
             and time scraped.
         """
-        articledata_loader = ItemLoader(item=ArticleData(), response=response)
-        raw_response = get_raw_response(response)
-        response_json = get_parsed_json(response)
-        response_data = get_parsed_data(response)
-        
+        try:
+            articledata_loader = ItemLoader(item=ArticleData(), response=response)
+            raw_response = get_raw_response(response)
+            response_json = get_parsed_json(response)
+            response_data = get_parsed_data(response)
+            response_data["source_country"] = ["Germany"]
+            response_data["time_scraped"] = [str(datetime.now())]
+            articledata_loader.add_value("raw_response", raw_response)
+            articledata_loader.add_value(
+                "parsed_json",
+                response_json,
+            )
+            articledata_loader.add_value("parsed_data", response_data)
 
-        articledata_loader.add_value("raw_response", raw_response)
-        articledata_loader.add_value(
-            "parsed_json",
-            response_json,
-        )
-        articledata_loader.add_value("parsed_data", response_data)
+            self.articles.append(dict(articledata_loader.load_item()))
+            return articledata_loader.item
 
-        self.articles.append(dict(articledata_loader.load_item()))
+        except Exception as exception:
+            LOGGER.info(
+                "Error occurred while scrapping an article for this link %s %s",
+                response.url, str(exception)
+            )
+            raise exceptions.ArticleScrappingException(
+                f"Error occurred while fetching article details:-  {str(exception)}"
+            )
 
+    def parse_sitemap(self, response) -> None:
+        try:            # Create an XmlResponse object from the response
+            xmlresponse = XmlResponse(
+                url=response.url, body=response.body, encoding="utf-8"
+            )
+            # Create a Selector object from the XmlResponse
+            xml_selector = Selector(xmlresponse)
+            # Define the XML namespaces used in the sitemap
+            xml_namespaces = {"xmlns": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+            links = xml_selector.xpath(
+                "//xmlns:loc/text()", namespaces=xml_namespaces
+            ).getall()
 
+            # Loop through each sitemap URL in the XML response
+            for link in links:
+                pub_date = (re.search(r"\d{4}-\d{2}-\d{2}", link)).group(0)
+                published_at = datetime.strptime(pub_date[:10], "%Y-%m-%d").date()
+
+                if self.since is None and self.until is None:
+                    if TODAYS_DATE == published_at:
+                        yield scrapy.Request(
+                            link,
+                            callback=self.parse_sitemap_article,
+                            meta={"link": link, "pub_date": published_at},
+                            dont_filter=True,
+                        )
+                elif (
+                    self.since
+                    and self.until
+                    and self.since <= published_at <= self.until
+                ):
+                    yield scrapy.Request(
+                        link,
+                        callback=self.parse_sitemap_article,
+                        meta={"link": link, "pub_date": published_at},
+                        dont_filter=True,
+                    )
+
+        except exceptions.SitemapScrappingException as exception:
+            LOGGER.error("Error while parsing sitemap: %s",str(exception))
+            print(f"Error while parsing sitemap: {str(exception)}")
+
+    def parse_sitemap_article(self, response) -> None:
+        """
+        This function takes in a response object and parses the sitemap.
+        It extracts the links and published dates from the response object
+        and uses them to make requests to other pages.
+        Yields:
+            scrapy.Request: A request object with the link and published date as metadata.
+            The request object is sent to the 'parse_sitemap_link_title'
+            callback function for further processing.
+        """
+        try:
+            xmlresponse = XmlResponse(
+                url=response.url, body=response.body, encoding="utf-8"
+            )
+            xml_selector = Selector(xmlresponse)
+            xml_namespaces = {"xmlns": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+            links = xml_selector.xpath(
+                "//xmlns:loc/text()", namespaces=xml_namespaces
+            ).getall()
+            for link in links:
+                data = {
+                    "link": link,
+                }
+                self.articles.append(data)
+        except exceptions.SitemapScrappingException as exception:
+            LOGGER.error("Error while parsing sitemap article: %s", str(exception))
+            exceptions.SitemapArticleScrappingException(
+                f"Error while parsing sitemap article: {str(exception)}"
+            )
 
     def closed(self, reason: any) -> None:
         """
@@ -180,27 +256,18 @@ class ZeitSpider(scrapy.Spider,BaseSpider):
         Returns:
             Values of parameters
         """
-
         try:
             if self.output_callback is not None:
                 self.output_callback(self.articles)
-            
             if not self.articles:
                 self.log("No articles or sitemap url scrapped.", level=logging.INFO)
             else:
                 export_data_to_json_file(self.type, self.articles, self.name)
-        except Exception as exception:
+        except BaseException as exception:
             exceptions.ExportOutputFileException(
-                f"Error occurred while writing json file{str(exception)} - {reason}"
+                f"Error occurred while closing crawler{str(exception)} - {reason}"
             )
             self.log(
-                f"Error occurred while writing json file{str(exception)} - {reason}",
+                f"Error occurred while closing crawler{str(exception)} - {reason}",
                 level=logging.ERROR,
             )
-
-
-
-if __name__ == "__main__":
-    process = CrawlerProcess(get_project_settings())
-    process.crawl(ZeitSpider)
-    process.start()

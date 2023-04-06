@@ -1,29 +1,163 @@
+"""Utility Functions"""
 import os
-import re
-import ast
 import json
 import logging
 import time
-from typing import Dict, List, Any
-
-import requests
-from io import BytesIO
-from PIL import Image
 from datetime import datetime
-from crwzeitnews import exceptions
-from crwzeitnews.constant import TODAYS_DATE, LOGGER
-from selenium import webdriver
+
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
+from seleniumwire import webdriver
 
-language_mapper = {"de": "Germany", "en": "English"}
+from crwzeitnews import exceptions
+from crwzeitnews.constant import TODAYS_DATE, LOGGER
+
+
+def get_request_headers():
+    """fetching headers from selenium instance
+
+    Returns:
+        dict: containing formatted request headers containing cookies
+    """
+    headers = {}
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
+    service = Service(executable_path=ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+    driver.get("https://www.zeit.de/index")
+    try:
+        
+        element = WebDriverWait(driver, 20).until(
+            EC.presence_of_element_located(
+               (By.CSS_SELECTOR,"div.option__accbtn")
+            )
+        )
+        
+        if element:
+            time.sleep(2)
+            element.click()
+            article = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.XPATH , "/html/body/div[3]"))
+            )
+            if article:
+                for request in driver.requests:
+                    if "https://www.zeit.de/index" in str(
+                        request.url
+                    ) and "cookie:" in str(request.headers):
+                        headers = format_headers(str(request.headers))
+                        return headers
+        return None
+
+    except BaseException as exception:
+        LOGGER.debug("error while running selenium instance: %s", exception)
+        raise exceptions.RequestHeadersException(
+            f"error while running selenium instance: {exception}"
+        )
+
+
+def format_headers(
+    request_headers, sep=": ", strip_cookie=False, strip_cl=True, strip_headers=[]
+) -> dict:
+    """
+    formates a string of headers to a dictionary containing key-value pairs of request headers
+    :param request_headers:
+    :param sep:
+    :param strip_cookie:
+    :param strip_cl:
+    :param strip_headers:
+    :return: -> dictionary
+    """
+    try:
+        headers_dict = {}
+        for keyvalue in request_headers.split("\n"):
+            keyvalue = keyvalue.strip()
+            if keyvalue and sep in keyvalue:
+                value = ""
+                key = keyvalue.split(sep)[0]
+                if len(keyvalue.split(sep)) == 1:
+                    value = ""
+                else:
+                    value = keyvalue.split(sep)[1]
+                if value == "''":
+                    value = ""
+                if strip_cookie and key.lower() == "cookie":
+                    continue
+                if strip_cl and key.lower() == "content-length":
+                    continue
+                if key in strip_headers:
+                    continue
+                headers_dict[key] = value
+
+        headers_dict["cookie"] = parse_cookies(headers_dict.get("cookie", None))
+        return headers_dict
+    except BaseException as exception:
+        LOGGER.debug("error while folding header data: %s ", exception)
+        raise exceptions.RequestHeadersException(
+            f"error while folding headers data: {exception}"
+        )
+
+
+def parse_cookies(raw_cookies):
+    """parsing cookies from raw string"""
+    cookies = {}
+
+    # loop over cookies
+    for cookie in raw_cookies.split("; "):
+        try:
+            # init cookie key
+            key = cookie.split("=")[0]
+
+            # init cookie value
+            val = cookie.split("=")[1]
+
+            # parse raw cookie string
+            cookies[key] = val
+
+        except BaseException as exception:
+            LOGGER.debug("error while folding cookies data: %s", exception)
+            raise exceptions.RequestHeadersException(
+                f"error while folding cookies data: {exception}"
+            )
+
+    return cookies
+
+
+def validate_sitemap_date_range(since, until):
+    """
+    validating date range given for sitemap
+    """
+    since = datetime.strptime(since, "%Y-%m-%d").date() if since else TODAYS_DATE
+    until = datetime.strptime(until, "%Y-%m-%d").date() if until else TODAYS_DATE
+    try:
+        if (since and not until) or (not since and until):
+            raise exceptions.InvalidDateException("since or until must be specified")
+
+        if since and until and since > until:
+            raise exceptions.InvalidDateException(
+                "since should not be later than until"
+            )
+
+        if since > TODAYS_DATE or until > TODAYS_DATE:
+            raise exceptions.InvalidDateException(
+                "since and until should not be greater than today_date"
+            )
+
+        if since and until and since > TODAYS_DATE:
+            raise exceptions.InvalidDateException(
+                "since should not be greater than today_date"
+            )
+
+    except exceptions.InvalidDateException as exception:
+        LOGGER.error("Error in __init__: %s ", exception, exc_info=True)
+        raise exceptions.InvalidDateException(f"Error in __init__: {exception}")
 
 
 def create_log_file():
+    """creating log file"""
     logging.basicConfig(
         level=logging.DEBUG,
         format="%(asctime)s [%(name)s] %(levelname)s: %(message)s",
@@ -94,6 +228,9 @@ def remove_empty_elements(parsed_data_dict):
 
 
 def get_raw_response(response):
+    """parsing raw response
+    returns: raw response
+    """
     raw_resopnse = {
         "content_type": "text/html; charset=utf-8",
         "content": response.css("html").get(),
@@ -109,26 +246,54 @@ def get_parsed_json(response):
     Returns
         parsed_json(dictionary): available json data
     """
-    parsed_json = {}
-    other_data = []
-    ld_json_data = response.css('script[type="application/ld+json"]::text').getall()
-    for a_block in ld_json_data:
-        data = json.loads(a_block)
-        if data.get("@type") == "Article":
-            parsed_json["main"] = data
-        elif data.get("@type") == "ImageGallery":
-            parsed_json["ImageGallery"] = data
-        elif data.get("@type") == "VideoObject":
-            parsed_json["VideoObject"] = data
-        else:
-            other_data.append(data)
+    try:
+        parsed_json = {}
+        image_objects = []
+        video_objects = []
+        other_data = []
+        ld_json_data = response.css('script[type="application/ld+json"]::text').getall()
+        for a_block in ld_json_data:
+            data = json.loads(a_block)
+            if data.get("@type") == "Article":
+                parsed_json["main"] = data
+            elif data.get("@type") in {"ImageGallery", "ImageObject"}:
+                image_objects.append(data)
+            elif data.get("@type") == "VideoObject":
+                video_objects.append(data)
+            else:
+                other_data.append(data)
 
-    parsed_json["Other"] = other_data
-    misc = get_misc(response)
-    if misc:
-        parsed_json["misc"] = misc
+        parsed_json["imageObjects"] = image_objects
+        parsed_json["videoObjects"] = video_objects
+        parsed_json["other"] = other_data
+        misc = get_misc(response)
+        if misc:
+            parsed_json["misc"] = misc
+        return remove_empty_elements(parsed_json)
 
-    return remove_empty_elements(parsed_json)
+    except BaseException as exception:
+        LOGGER.info("Error occured while getting parsed json %s ", exception)
+        raise exceptions.ArticleScrappingException(
+            f"Error occurred while getting parsed json {exception}"
+        )
+
+
+def get_publisher_info(article_data: dict) -> dict:
+    """
+    filtering required information from article data
+    Parameters:
+        article_data: dict
+    returns: dict
+    """
+    return remove_empty_elements(
+        {
+            "@id": article_data.get("@id", None),
+            "@type": article_data.get("@type", None),
+            "name": article_data.get("name", None),
+            "url": article_data.get("url", None),
+            "logo": article_data.get("logo", None),
+        }
+    )
 
 
 def get_main(response):
@@ -152,12 +317,13 @@ def get_main(response):
             elif data.get("@type") == "VideoObject":
                 information["VideoObject"] = data
             elif data.get("@type") == "NewsMediaOrganization":
-                information["publisher_info"] = data
-
+                information["publisher_info"] = get_publisher_info(data)
         return information
-    except BaseException as e:
-        LOGGER.error(f"{e}")
-        print(f"Error while getting main: {e}")
+    except BaseException as exception:
+        LOGGER.error("Error while getting main %s ", exception)
+        raise exceptions.ArticleScrappingException(
+            f"Error while getting main: {exception}"
+        )
 
 
 def get_misc(response):
@@ -174,9 +340,11 @@ def get_misc(response):
         for block in misc:
             data.append(json.loads(block))
         return data
-    except BaseException as e:
-        LOGGER.error(f"{e}")
-        print(f"Error while getting misc: {e}")
+    except BaseException as exception:
+        LOGGER.error("error while getting misc: %s ", exception)
+        raise exceptions.ArticleScrappingException(
+            f"Error while getting misc: {exception}"
+        )
 
 
 def get_parsed_data_dict() -> dict:
@@ -206,50 +374,6 @@ def get_parsed_data_dict() -> dict:
     }
 
 
-# def get_parsed_data(response):
-#     """
-#     Extracts data from a news article webpage and returns it in a dictionary format.
-#     Parameters:
-#     response (scrapy.http.Response): A scrapy response object of the news article webpage.
-#     Returns:
-#     dict: A dictionary containing the extracted data from the webpage, including:
-#          - 'publisher': (str) The name of the publisher of the article.
-#          - 'article_catagory': The region of the news that the article refers to
-#          - 'headline': (str) The headline of the article.
-#          - 'authors': (list) The list of authors of the article, if available.
-#          - 'published_on': (str) The date and time the article was published.
-#          - 'updated_on': (str) The date and time the article was last updated, if available.
-#          - 'text': (list) The list of text paragraphs in the article.
-#          - 'images': (list) The list of image URLs in the article, if available. (using bs4)
-#     """
-#     try:
-#         main_dict = {}
-#         imp_ld_json_data = get_main(response)
-#         article_json = imp_ld_json_data.get("article")
-#         webpage_json = imp_ld_json_data.get("WebPage")
-#         if article_json:
-#             main_dict["author"] =  article_json.get("author")
-#             main_dict["description"] = article_json.get("description")
-#             main_dict["modified_at"] = article_json.get("dateModified")
-#             main_dict["published_at"] = article_json.get("datePublished")
-#             main_dict["publisher"] = article_json.get("publisher")
-#             main_dict["text"] = article_json.get("articleBody")
-#             if webpage_json:
-#                 main_dict["thumbnail_image"] = extract_thumbnail_image(webpage_json)
-#             main_dict["title"] = article_json.get("headline")
-#             main_dict["tags"] = article_json.get("keywords")
-#             mapper = {"de": "German"}
-#             article_lang = response.css("html::attr(lang)").get()
-#             main_dict["source_language"] = [mapper.get(article_lang)]
-#             main_dict["source_country"] = ["Germany"]
-#             main_dict["time_scraped"] = [str(datetime.now())]
-#             main_dict = format_dictionary(main_dict)
-#         return remove_empty_elements(main_dict)
-
-#     except BaseException as e:
-#         LOGGER.error(f"{e}")
-#         raise exceptions.ArticleScrappingException(f"Error while fetching parsed_data data: {e}")
-
 def get_parsed_data(response: str) -> dict:
     """
      Parsed data response from generated data using given response and selector
@@ -273,12 +397,14 @@ def get_parsed_data(response: str) -> dict:
         parsed_json_main = videoobject_json
     parsed_data_dict = get_parsed_data_dict()
     parsed_data_dict |= get_country_details()
-    parsed_data_dict |= get_language_details(response)
+    parsed_data_dict |= {"source_language": ["German"]}
     parsed_data_dict |= get_author_details(parsed_json_main, response)
     parsed_data_dict |= get_descriptions_date_details(parsed_json_main)
-    parsed_data_dict |= get_publisher_details(parsed_json_main)
+    parsed_data_dict |= get_publisher_details(publisher_info_json)
     parsed_data_dict |= get_text_title_section_tag_details(parsed_json_main, response)
-    parsed_data_dict |= get_thumbnail_image_video(response, webpage_json)
+    parsed_data_dict |= get_thumbnail_image_video(
+        response, webpage_json, parsed_json_main
+    )
     final_dict = format_dictionary(parsed_data_dict)
     return remove_empty_elements(final_dict)
 
@@ -295,24 +421,7 @@ def get_country_details() -> dict:
     return {"source_country": ["Germany"]}
 
 
-def get_language_details(response: str) -> dict:
-    """
-    Return language related details
-    Args:
-        parsed_data: response of application/ld+json data
-        response: provided response
-    Returns:
-        dict: language related details
-    """
-    return {
-        "source_language": [
-            "German"
-        ]
-    }
-
-
-def get_author_details(parsed_data: list, response: str) -> dict[str, list[
-    dict[str, Any] | dict[str, Any] | None | Any]] | None:
+def get_author_details(parsed_data: list, response: str) -> dict:
     """
     Return author related details
     Args:
@@ -326,7 +435,9 @@ def get_author_details(parsed_data: list, response: str) -> dict[str, list[
     if not parsed_data.get("author"):
         return author_details.append(
             {
-                "name": response.css('div.column-heading__name > script[itemprop="name"]::text')
+                "name": response.css(
+                    'div.column-heading__name > script[itemprop="name"]::text'
+                )
                 .get()
                 .strip()
             }
@@ -339,7 +450,6 @@ def get_author_details(parsed_data: list, response: str) -> dict[str, list[
         }
         for author in parsed_data.get("author")
     )
-    print(author_details)
     return {"author": author_details}
 
 
@@ -351,7 +461,7 @@ def get_descriptions_date_details(parsed_data: list) -> dict:
     Returns:
         dict: description, modified date, published date related details
     """
-    if "Article" or "VideoObject" in parsed_data.get("@type"):
+    if parsed_data.get("@type")[0] in {"Article", "VideoObject"}:
         return {
             "description": parsed_data.get("description"),
             "modified_at": parsed_data.get("dateModified"),
@@ -374,10 +484,7 @@ def get_publisher_details(parsed_data: list) -> dict:
     Returns:
         dict: publisher details like name, type, id related details
     """
-    publisher_details = []
-    if parsed_data.get("publisher"):
-        publisher_details.extend(parsed_data.get("publisher"))
-    return {"publisher": publisher_details}
+    return {"publisher": parsed_data}
 
 
 def get_text_title_section_tag_details(parsed_data: list, response: str) -> dict:
@@ -389,11 +496,11 @@ def get_text_title_section_tag_details(parsed_data: list, response: str) -> dict
     Returns:
         dict: text, title, section, tag details
     """
-    if "Article" or "VideoObject" in parsed_data.get("@type"):
+    if parsed_data.get("@type")[0] in {"Article", "VideoObject"}:
         return {
             "title": parsed_data.get("headline"),
             "text": parsed_data.get("articleBody"),
-            "section": parsed_data.get('articleSection'),
+            "section": parsed_data.get("articleSection"),
             "tags": parsed_data.get("keywords"),
         }
     return {
@@ -402,7 +509,9 @@ def get_text_title_section_tag_details(parsed_data: list, response: str) -> dict
     }
 
 
-def get_thumbnail_image_video(response: str, webpage_json: dict) -> dict:
+def get_thumbnail_image_video(
+    response: str, webpage_json: dict, parsed_data: dict
+) -> dict:
     """
     Returns thumbnail images, images and video details
     Args:
@@ -411,57 +520,34 @@ def get_thumbnail_image_video(response: str, webpage_json: dict) -> dict:
     Returns:
         dict: thumbnail images, images and video details
     """
-    video_urls = response.css("video::attr(src)").getall()
-    thumbnail_json = webpage_json.get("primaryImageOfPage")
-    if thumbnail_json:
-        thumbnail_url = [thumbnail_json.get("url")]
-    return {
-        "embed_video_link": video_urls,
-        "thumbnail_image": thumbnail_url
-    }
+    video_urls = []
+    thumbnail_url = []
+    if webpage_json:
+        thumbnail_json = webpage_json.get("primaryImageOfPage")
+        if thumbnail_json:
+            thumbnail_url.append(thumbnail_json.get("url"))
+    if parsed_data.get("@type")[0] == "VideoObject":
+        video_urls.append(response.url)
+    elif parsed_data.get("@type")[0] == "Article":
+        raw_sources = response.css('script[class="raw__source"]').getall()
+        if raw_sources:
+            for a_response in raw_sources:
+                link_data = ((a_response.split("src="))[1]).split('"')[1::2]
+                video_urls.append(link_data[0])
+
+    return {"embed_video_link": video_urls, "thumbnail_image": thumbnail_url}
 
 
 def format_dictionary(raw_dictionary):
+    """Formatting dictionary with all the values converted to list
+
+    Args:
+        raw_dictionary (dict)
+
+    Returns:
+        dict: formatted dictionary
+    """
     for key, value in raw_dictionary.items():
         if not isinstance(value, list):
             raw_dictionary[key] = [value]
     return raw_dictionary
-
-
-def extract_thumbnail_image(webpage_json):
-    image_object_dict = webpage_json.get("primaryImageOfPage")
-    if image_object_dict:
-        return image_object_dict.get("url")
-
-
-def validate_sitemap_date_range(start_date, end_date):
-    """validated date range given by user
-
-    Args:
-        start_date (str): start_date
-        end_date (str): end_date
-
-    """
-    start_date = (
-        datetime.strptime(start_date, "%Y-%m-%d").date() if start_date else TODAYS_DATE
-    )
-    end_date = datetime.strptime(end_date, "%Y-%m-%d").date() if end_date else TODAYS_DATE
-    try:
-        if (start_date and not end_date) or (not start_date and end_date):
-            raise exceptions.InvalidDateException(
-                "start_date or end_date must be specified"
-            )
-
-        if start_date and end_date and start_date > end_date:
-            raise exceptions.InvalidDateException(
-                "start_date should not be later than end_date"
-            )
-
-        if start_date > TODAYS_DATE or end_date > TODAYS_DATE:
-            raise exceptions.InvalidDateException(
-                "start_date and end_date should not be greater than today_date"
-            )
-
-    except exceptions.InvalidDateException as e:
-        LOGGER.error(f"Error while validating daterange in __init__: {e}", exc_info=True)
-        raise exceptions.InvalidDateException(f"Error while validating daterange in __init__: {e}")
